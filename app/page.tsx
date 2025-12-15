@@ -1,5 +1,5 @@
-import { ComponentExample } from "@/components/component-example";
+import { WorkoutList } from "@/components/workout-list";
 
 export default function Page() {
-return <ComponentExample />;
+  return <WorkoutList />;
 }

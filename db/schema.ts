@@ -1,5 +1,12 @@
 import { relations } from "drizzle-orm";
-import { pgTable, text, timestamp, boolean, index } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  text,
+  timestamp,
+  boolean,
+  index,
+  integer,
+} from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -94,6 +101,7 @@ export const accountRelations = relations(account, ({ one }) => ({
 export const workout = pgTable("workout", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
+  description: text("description"),
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
@@ -106,6 +114,11 @@ export const workout = pgTable("workout", {
 export const exercise = pgTable("exercise", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
+  repsMin: integer("reps_min").notNull(),
+  repsMax: integer("reps_max"),
+  sets: integer("sets").notNull(),
+  weight: integer("weight").notNull(),
+  notes: text("notes"),
   workoutId: text("workout_id")
     .notNull()
     .references(() => workout.id, { onDelete: "cascade" }),
