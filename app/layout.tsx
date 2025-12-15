@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Gym tracker",
+  title: "Gym Ladder",
   description: "Track your exercises without logging in",
 };
 
@@ -35,8 +35,8 @@ export default function RootLayout({
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
+          // enableSystem
+          // disableTransitionOnChange
         >
           <div className="absolute-top-0 w-full">
             <Header />
