@@ -7,6 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { PlusIcon } from "lucide-react";
 
 interface Workout {
   id: string;
@@ -22,10 +23,16 @@ export function WorkoutList() {
   ];
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="flex justify-center mt-10">
       <Card className="wrapper">
         <CardHeader>
           <CardTitle>Workout List</CardTitle>
+          <CardAction>
+            <Button>
+              <PlusIcon />
+              Create Workout
+            </Button>
+          </CardAction>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           {workouts.map((workout) => (

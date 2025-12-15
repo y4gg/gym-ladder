@@ -129,4 +129,8 @@
   .wrapper {
     width: min(50em, 95%);
   }
+
+  .small-wrapper {
+    width: min(35em, 95%);
+  }
 }
