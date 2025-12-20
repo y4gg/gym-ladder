@@ -20,18 +20,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { set } from "better-auth";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 export default function AccountPage() {
   const [deleteConfirm, setDeleteConfirm] = useState(false);
-  const [changePasswordConfirm, setChangePasswordConfirm] = useState(false);
+  const [changePasswordDialog, setChangePasswordDialog] = useState(false);
   const [changeEmailDialog, setChangeEmailDialog] = useState(false);
   const [newEmail, setNewEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -48,8 +41,10 @@ export default function AccountPage() {
     authClient.changePassword({
       newPassword: newPassword,
       currentPassword: password,
+      revokeOtherSessions: true,
     });
     toast.success("Password changed");
+    setChangePasswordDialog(false);
   };
 
   const changeEmail = async () => {
@@ -57,6 +52,7 @@ export default function AccountPage() {
       newEmail: newEmail,
     });
     toast.success("Email changed");
+    setChangeEmailDialog(false);
   };
 
   const deleteAccount = async () => {
@@ -87,7 +83,10 @@ export default function AccountPage() {
               <Label className="mb-2 mt-5">Password</Label>
               <div className="flex gap-1">
                 <Input disabled value="************" />
-                <Button size={"icon"}>
+                <Button
+                  size={"icon"}
+                  onClick={() => setChangePasswordDialog(true)}
+                >
                   <WrenchIcon />
                 </Button>
               </div>
@@ -121,48 +120,46 @@ export default function AccountPage() {
                 </AlertDialogContent>
               </AlertDialog>
               {/* Change Password Dialog */}
-              <Dialog>
-                <DialogHeader>
-                  <DialogTitle>Change Password</DialogTitle>
-                </DialogHeader>
-                <DialogContent>
+              <Dialog
+                open={changePasswordDialog}
+                onOpenChange={setChangePasswordDialog}
+              >
+                <DialogContent className={"gap-3"}>
                   <Label>Current Password</Label>
                   <Input
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     type="password"
+                    id="password"
+                    placeholder="************"
                   />
                   <Label>New Password</Label>
                   <Input
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     type="password"
-                  />
-                  <Label>Confirm New Password</Label>
-                  <Input
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    type="password"
+                    id="new-password"
+                    placeholder="************"
                   />
                   <Button onClick={changePassword}>Change Password</Button>
                 </DialogContent>
               </Dialog>
               {/*Change Email Dialog*/}
-              <Dialog>
-                <DialogHeader>
-                  <DialogTitle>Change Email</DialogTitle>
-                </DialogHeader>
-                <DialogContent>
+              <Dialog
+                open={changeEmailDialog}
+                onOpenChange={setChangeEmailDialog}
+              >
+                <DialogContent className={"gap-3"}>
                   <Label>New Email</Label>
                   <Input
                     value={newEmail}
                     onChange={(e) => setNewEmail(e.target.value)}
                     type="email"
+                    placeholder="me@example.com"
                   />
                   <Button onClick={changeEmail}>Change Email</Button>
                 </DialogContent>
               </Dialog>
-              2
             </>
           ) : (
             <div className="w-full flex items-center justify-center h-53.5">

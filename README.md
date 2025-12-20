@@ -6,7 +6,7 @@ Track your gym progress and climb up the gym ladder.
 
 ## Todo:
 
-- Finish the account page
+- Make the account page show errors, not just success
 - Finish the local workout system
-- Finish the syncing systema
+- Finish the syncing system
 - Finish the workout page
