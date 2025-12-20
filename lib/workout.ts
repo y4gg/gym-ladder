@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import { createId } from "@paralleldrive/cuid2";
 
 interface NewWorkout {
@@ -19,24 +20,41 @@ interface WorkoutStore {
   editWorkout: (id: string, workout: Partial<Workout>) => void;
 }
 
-export const useWorkouts = create<WorkoutStore>((set) => ({
-  workouts: [],
-  newWorkout: (workout: NewWorkout) => {
-    const newWorkout: Workout = {
-      id: createId(),
-      name: workout.name,
-      description: workout.description,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    set((state) => ({
-      workouts: [...state.workouts, newWorkout],
-    }));
-  },
-  deleteWorkout: (id: string) => {
-    set((state) => ({
-      workouts: state.workouts.filter((workout) => workout.id !== id),
-    }));
-  },
-  editWorkout: (id: string, workout: Partial<Workout>) => {},
-}));
+export const useWorkouts = create<WorkoutStore>()(
+  persist(
+    (set) => ({
+      workouts: [],
+      newWorkout: (workout: NewWorkout) => {
+        const newWorkout: Workout = {
+          id: createId(),
+          name: workout.name,
+          description: workout.description,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
+        set((state) => ({
+          workouts: [...state.workouts, newWorkout],
+        }));
+      },
+      deleteWorkout: (id: string) => {
+        set((state) => ({
+          workouts: state.workouts.filter((workout) => workout.id !== id),
+        }));
+      },
+      editWorkout: (id: string, workout: Partial<Workout>) => {},
+    }),
+    {
+      name: "workout-storage",
+      onRehydrateStorage: () => (state) => {
+        if (state?.workouts) {
+          // Convert date strings back to Date objects
+          state.workouts = state.workouts.map((workout) => ({
+            ...workout,
+            createdAt: new Date(workout.createdAt),
+            updatedAt: new Date(workout.updatedAt),
+          }));
+        }
+      },
+    }
+  )
+);
