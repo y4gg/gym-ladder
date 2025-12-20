@@ -9,15 +9,17 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, Trash2Icon } from "lucide-react";
 import { useWorkouts } from "@/lib/workout";
 import { EmptyDemo } from "@/components/empty-workouts";
 import { CreateWorkoutDialog } from "./create-workout-dialog";
 import { useState } from "react";
+import Link from "next/link";
 
 export function WorkoutList() {
   const workouts = useWorkouts((state) => state.workouts);
   const [open, setOpen] = useState(false);
+  const delWorkout = useWorkouts((state) => state.deleteWorkout);
 
   return (
     <div className="flex justify-center mt-10">
@@ -38,8 +40,17 @@ export function WorkoutList() {
                 <CardHeader>
                   <CardTitle>{workout.name}</CardTitle>
                   <CardDescription>{workout.description}</CardDescription>
-                  <CardAction>
-                    <Button>View</Button>
+                  <CardAction className="flex">
+                    <Link href={"/w/" + workout.id}>
+                      <Button>View</Button>
+                    </Link>
+                    <Button
+                      onClick={() => delWorkout(workout.id)}
+                      size={"icon"}
+                      variant={"destructive"}
+                    >
+                      <Trash2Icon />
+                    </Button>
                   </CardAction>
                 </CardHeader>
               </Card>

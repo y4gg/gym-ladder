@@ -19,6 +19,7 @@ interface props {
 
 export function CreateWorkoutDialog({ open, onOpenChange }: props) {
   const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
   const { newWorkout } = useWorkouts();
 
   const handleCreate = () => {
@@ -44,6 +45,16 @@ export function CreateWorkoutDialog({ open, onOpenChange }: props) {
           placeholder={"Push"}
           value={name}
           onChange={(e) => setName(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleCreate();
+            }
+          }}
+        />
+        <Input
+          placeholder="Itteration 1"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               handleCreate();

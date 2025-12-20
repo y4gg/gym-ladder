@@ -31,7 +31,8 @@ export function LoginForm({
   const [password, setPassword] = useState("");
 
   if (session) {
-    return router.push("/");
+    router.push("/");
+    return null;
   }
 
   const handleSubmit = async (event?: React.FormEvent<HTMLFormElement>) => {
