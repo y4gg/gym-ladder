@@ -1,7 +1,6 @@
 import { createId } from "@paralleldrive/cuid2";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { useWorkouts } from "./workout";
 
 export interface NewExercise {
   name: string;
@@ -42,7 +41,6 @@ export const useExercises = create<ExerciseStore>()(
           createdAt: new Date(),
           updatedAt: new Date(),
         };
-        useWorkouts().addExerciseToWorkout(exercise.workoutId, exercise.id);
         set((state) => ({
           exercises: [...state.exercises, exercise],
         }));

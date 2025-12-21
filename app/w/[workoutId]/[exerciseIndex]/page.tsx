@@ -1,8 +1,9 @@
-export default async function Page({}: // params,
-{
-  // params: Promise<{ slug: string }>;
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
 }) {
-  // const { slug } = await params;
+  const { slug } = await params;
   return (
     <div className="grid grid-cols-[2fr_3fr] h-screen">
       <div className="bg-green-500 p-8">1/3 width</div>
