@@ -23,14 +23,13 @@ export function CreateWorkoutDialog({ open, onOpenChange }: props) {
   const { newWorkout } = useWorkouts();
 
   const handleCreate = () => {
-    if (!name.trim()) return;
-
     newWorkout({
       name: name.trim(),
-      description: null,
+      description: description.trim(),
     });
 
     setName("");
+    setDescription("");
     onOpenChange(false);
   };
 
@@ -42,6 +41,7 @@ export function CreateWorkoutDialog({ open, onOpenChange }: props) {
           To create a new workout, just specify the name and click on create!
         </DialogDescription>
         <Input
+          required
           placeholder={"Push"}
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -52,7 +52,7 @@ export function CreateWorkoutDialog({ open, onOpenChange }: props) {
           }}
         />
         <Input
-          placeholder="Itteration 1"
+          placeholder="Itteration 1, Monday(s)"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           onKeyDown={(e) => {

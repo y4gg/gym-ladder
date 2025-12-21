@@ -1,16 +1,15 @@
 import { Dumbbell } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import {
   Empty,
-  EmptyContent,
+  // EmptyContent,
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
 
-export function EmptyDemo() {
+export function EmptyWorkout() {
   return (
     <Empty>
       <EmptyHeader>
