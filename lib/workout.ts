@@ -19,6 +19,7 @@ interface WorkoutStore {
   newWorkout: (workout: NewWorkout) => void;
   deleteWorkout: (id: string) => void;
   editWorkout: (id: string, workout: Partial<Workout>) => void;
+  addExerciseToWorkout: (workoutId: string, exerciseId: string) => void;
 }
 
 export const useWorkouts = create<WorkoutStore>()(
@@ -44,6 +45,21 @@ export const useWorkouts = create<WorkoutStore>()(
         }));
       },
       editWorkout: (id: string, workout: Partial<Workout>) => {},
+      addExerciseToWorkout: (workoutId, exerciseId) => {
+        set((state) => ({
+          workouts: state.workouts.map((workout) =>
+            workout.id === workoutId
+              ? {
+                  ...workout,
+                  exerciseIds: workout.exerciseIds.includes(exerciseId)
+                    ? workout.exerciseIds
+                    : [...workout.exerciseIds, exerciseId],
+                  updatedAt: new Date(),
+                }
+              : workout
+          ),
+        }));
+      },
     }),
     {
       name: "workout-storage",
