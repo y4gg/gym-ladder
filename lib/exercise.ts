@@ -1,3 +1,4 @@
+import { createId } from "@paralleldrive/cuid2";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -19,8 +20,8 @@ export interface Exercise extends NewExercise {
 
 interface ExerciseStore {
   exercises: Exercise[];
-  newExercise: () => void;
-  deleteExercise: () => void;
+  newExercise: (workoutId: string, newExercise: NewExercise) => void;
+  deleteExercise: (exerciseId: string) => void;
 }
 
 const useExercises = create<ExerciseStore>((set) => ({
@@ -38,6 +39,22 @@ const useExercises = create<ExerciseStore>((set) => ({
       updatedAt: new Date(),
     },
   ],
-  newExercise: () => {},
+  newExercise: (workoutId, newExercise) => {
+    const exercise: Exercise = {
+      id: createId(),
+      name: newExercise.name,
+      repsMin: newExercise.repsMin,
+      repsMax: newExercise.repsMax,
+      sets: newExercise.sets,
+      weight: newExercise.weight,
+      notes: newExercise.notes,
+      workoutId: workoutId,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    set((state) => ({
+      exercises: [...state.exercises, exercise],
+    }));
+  },
   deleteExercise: () => {},
 }));

@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Select,
   SelectContent,
@@ -26,6 +27,7 @@ function AccountButton() {
 }
 
 function WorkoutSelector() {
+  // Shoutout to ChatGPT 5.2
   const workouts = useWorkouts((state) => state.workouts);
   const pathname = usePathname();
   const router = useRouter();
