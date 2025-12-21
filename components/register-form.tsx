@@ -20,6 +20,7 @@ import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export function RegisterForm({
   className,
@@ -106,7 +107,7 @@ export function RegisterForm({
               <Field>
                 <Button type="submit">Create account</Button>
                 <FieldDescription className="text-center">
-                  Already have an account? <a href="/login">Log in</a>
+                  Already have an account? <Link href="/login">Log in</Link>
                 </FieldDescription>
               </Field>
             </FieldGroup>
