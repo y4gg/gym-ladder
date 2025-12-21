@@ -4,6 +4,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogHeader,
   DialogTitle,
 } from "./ui/dialog";
 import { Button } from "./ui/button";
@@ -11,6 +12,7 @@ import { PlusIcon } from "lucide-react";
 import { Input } from "./ui/input";
 import { useState } from "react";
 import { useWorkouts } from "@/lib/workout";
+import { Label } from "./ui/label";
 
 interface props {
   open: boolean;
@@ -35,11 +37,15 @@ export function CreateWorkoutDialog({ open, onOpenChange }: props) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogTitle>Create Workout</DialogTitle>
-        <DialogDescription>
-          To create a new workout, just specify the name and click on create!
-        </DialogDescription>
+      <DialogContent className={"gap-2"}>
+        <DialogHeader>
+          {" "}
+          <DialogTitle>Create Workout</DialogTitle>
+          <DialogDescription>
+            To create a new workout, just specify the name and click on create!
+          </DialogDescription>
+        </DialogHeader>
+        <Label className="mt-2">Name</Label>
         <Input
           required
           placeholder={"Push"}
@@ -51,6 +57,7 @@ export function CreateWorkoutDialog({ open, onOpenChange }: props) {
             }
           }}
         />
+        <Label className="mt-2">Description</Label>
         <Input
           placeholder="Itteration 1, Monday(s)"
           value={description}
@@ -61,7 +68,7 @@ export function CreateWorkoutDialog({ open, onOpenChange }: props) {
             }
           }}
         />
-        <Button onClick={handleCreate}>
+        <Button onClick={handleCreate} className={"mt-2"}>
           <PlusIcon />
           Create
         </Button>
