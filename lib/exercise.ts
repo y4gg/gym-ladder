@@ -25,20 +25,7 @@ interface ExerciseStore {
 }
 
 const useExercises = create<ExerciseStore>((set) => ({
-  exercises: [
-    {
-      id: "b8lrbmv7p3kclobjz3ecvw98",
-      name: "Ball crusher",
-      repsMin: 8,
-      repsMax: null,
-      sets: 3,
-      weight: 30,
-      notes: null,
-      workoutId: "",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-  ],
+  exercises: [],
   newExercise: (workoutId, newExercise) => {
     const exercise: Exercise = {
       id: createId(),
