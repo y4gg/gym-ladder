@@ -11,6 +11,7 @@ interface Workout extends NewWorkout {
   id: string;
   createdAt: Date;
   updatedAt: Date;
+  exerciseIds: string[];
 }
 
 interface WorkoutStore {
@@ -31,6 +32,7 @@ export const useWorkouts = create<WorkoutStore>()(
           description: workout.description,
           createdAt: new Date(),
           updatedAt: new Date(),
+          exerciseIds: [],
         };
         set((state) => ({
           workouts: [...state.workouts, newWorkout],
