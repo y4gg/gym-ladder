@@ -12,7 +12,7 @@ import { PlusIcon } from "lucide-react";
 import { Input } from "./ui/input";
 import { useState } from "react";
 import { Label } from "./ui/label";
-import { useExercises, NewExercise } from "@/lib/exercise";
+import { useWorkouts, NewExercise } from "@/lib/workout";
 
 interface props {
   workoutId: string;
@@ -29,14 +29,14 @@ export function CreateExerciseDialog({ workoutId, open, onOpenChange }: props) {
     weight: 0,
     notes: "",
   });
-  const { newExercise } = useExercises();
+  const { addExerciseToWorkout } = useWorkouts();
 
   const updateExercise = (field: keyof typeof exercise, value: string) => {
     setExercise((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleCreate = () => {
-    newExercise(workoutId, {
+    addExerciseToWorkout(workoutId, {
       name: exercise.name.trim(),
       repsMin: exercise.repsMin,
       repsMax: exercise.repsMax,

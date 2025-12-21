@@ -6,6 +6,7 @@ import {
   boolean,
   integer,
   index,
+  jsonb,
 } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
@@ -134,6 +135,22 @@ export const workout = pgTable("workout", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
   description: text("description"),
+  exercises: jsonb("exercises")
+    .$type<
+      Array<{
+        id: string;
+        name: string;
+        repsMin: number;
+        repsMax: number | null;
+        sets: number;
+        weight: number;
+        notes: string | null;
+        createdAt: Date;
+        updatedAt: Date;
+      }>
+    >()
+    .default([])
+    .notNull(),
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
@@ -143,34 +160,9 @@ export const workout = pgTable("workout", {
     .notNull(),
 });
 
-export const exercise = pgTable("exercise", {
-  id: text("id").primaryKey(),
-  name: text("name").notNull(),
-  repsMin: integer("reps_min").notNull(),
-  repsMax: integer("reps_max"),
-  sets: integer("sets").notNull(),
-  weight: integer("weight").notNull(),
-  notes: text("notes"),
-  workoutId: text("workout_id")
-    .notNull()
-    .references(() => workout.id, { onDelete: "cascade" }),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at")
-    .$onUpdate(() => new Date())
-    .notNull(),
-});
-
-export const workoutRelations = relations(workout, ({ many, one }) => ({
-  exercises: many(exercise),
+export const workoutRelations = relations(workout, ({ one }) => ({
   user: one(user, {
     fields: [workout.userId],
     references: [user.id],
-  }),
-}));
-
-export const exerciseRelations = relations(exercise, ({ one }) => ({
-  workout: one(workout, {
-    fields: [exercise.workoutId],
-    references: [workout.id],
   }),
 }));
