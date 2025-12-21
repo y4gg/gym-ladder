@@ -13,7 +13,7 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { ModeToggle } from "@/components/mode-toggle";
 import { authClient } from "@/lib/auth-client";
-import Image from "next/image";
+// import Image from "next/image";
 import { useWorkouts } from "@/lib/workout";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -73,8 +73,8 @@ function WorkoutSelector() {
 function Branding() {
   return (
     <Link href={"/"} className="flex gap-2">
-      <Image src={"/logo.png"} alt="Logo" width={68} height={34} />
-      <h1 className="text-2xl font-semibold">Gym ladder</h1>
+      {/* <Image src={"/logo.png"} alt="Logo" width={68} height={34} /> */}
+      <h1 className="text-2xl fontbold">Gym ladder</h1>
     </Link>
   );
 }
