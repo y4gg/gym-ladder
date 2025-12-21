@@ -74,7 +74,7 @@ function Branding() {
   return (
     <Link href={"/"} className="flex gap-2">
       {/* <Image src={"/logo.png"} alt="Logo" width={68} height={34} /> */}
-      <h1 className="text-2xl fontbold">Gym ladder</h1>
+      <h1 className="text-2xl font-bold">Gym ladder</h1>
     </Link>
   );
 }
