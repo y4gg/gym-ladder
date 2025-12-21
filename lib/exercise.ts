@@ -42,6 +42,7 @@ export const useExercises = create<ExerciseStore>()(
           createdAt: new Date(),
           updatedAt: new Date(),
         };
+        useWorkouts().addExerciseToWorkout(exercise.workoutId, exercise.id);
         set((state) => ({
           exercises: [...state.exercises, exercise],
         }));
