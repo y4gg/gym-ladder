@@ -60,9 +60,7 @@ function WorkoutSelector() {
               </SelectItem>
             ))
           ) : (
-            <SelectItem value="" disabled>
-              No workouts yet.
-            </SelectItem>
+            <SelectItem disabled>No workouts yet.</SelectItem>
           )}
         </SelectGroup>
       </SelectContent>
