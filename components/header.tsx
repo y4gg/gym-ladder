@@ -95,7 +95,8 @@ export function Header() {
       <CardContent className="flex items-center justify-between">
         <div className="flex gap-4">
           <Branding />
-          <WorkoutSelector />
+          <div className="hidden md:block">
+          <WorkoutSelector /></div>
         </div>
         <div className="flex gap-1">
           <ModeToggle />
