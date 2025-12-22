@@ -34,6 +34,7 @@ interface WorkoutStore {
   newWorkout: (workout: NewWorkout) => void;
   deleteWorkout: (id: string) => void;
   editWorkout: (id: string, workout: Partial<Workout>) => void;
+  getExercises: (workoutId: string) => void
   addExerciseToWorkout: (workoutId: string, exercise: NewExercise) => void;
   deleteExerciseFromWorkout: (workoutId: string, exerciseId: string) => void;
   updateExerciseInWorkout: (
@@ -72,6 +73,7 @@ export const useWorkouts = create<WorkoutStore>()(
           ),
         }));
       },
+      getExercises: (workoutId) => {},
       addExerciseToWorkout: (workoutId, exercise) => {
         const newExercise: Exercise = {
           id: createId(),

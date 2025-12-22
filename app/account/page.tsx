@@ -63,7 +63,7 @@ export default function AccountPage() {
 
   return (
     <div className="flex justify-center w-screen">
-      <Card className="small-wrapper mt-10">
+      <Card className="small-wrapper mt-4 md:mt-10">
         <CardHeader>
           <CardTitle>Account</CardTitle>
         </CardHeader>
