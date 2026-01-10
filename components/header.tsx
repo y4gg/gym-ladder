@@ -15,7 +15,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ModeToggle } from "@/components/mode-toggle";
 import { authClient } from "@/lib/auth-client";
 // import Image from "next/image";
-import { useWorkouts } from "@/lib/workout";
+import { useWorkoutStore } from "@/lib/workout";
 import { usePathname, useRouter } from "next/navigation";
 
 function AccountButton() {
@@ -28,7 +28,7 @@ function AccountButton() {
 
 function WorkoutSelector() {
   // Shoutout to ChatGPT 5.2
-  const workouts = useWorkouts((state) => state.workouts);
+  const workouts = useWorkoutStore((state) => state.workouts);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -96,7 +96,8 @@ export function Header() {
         <div className="flex gap-4">
           <Branding />
           <div className="hidden md:block">
-          <WorkoutSelector /></div>
+            <WorkoutSelector />
+          </div>
         </div>
         <div className="flex gap-1">
           <ModeToggle />

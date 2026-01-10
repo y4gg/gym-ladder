@@ -2,7 +2,7 @@
 
 function getWorkouts() {}
 
-function newWorkout() {}
+function addWorkout() {}
 
 function deleteWorkout() {}
 

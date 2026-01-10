@@ -9,26 +9,27 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PlusIcon, Trash2Icon } from "lucide-react";
-import { useWorkouts } from "@/lib/workout";
+import { Workout } from "@/lib/workout";
 import { EmptyWorkout } from "@/components/empty-workouts";
 import { CreateExerciseDialog } from "./create-exercise-dialog";
 import { useState } from "react";
 import Link from "next/link";
 
 interface ExerciseListProps {
-    workoutId: string
+  workout: Workout;
 }
 
-export function ExerciseList({workoutId}: ExerciseListProps) {
-  const workouts = useWorkouts((state) => state.workouts);
+export function ExerciseList({ workout }: ExerciseListProps) {
   const [open, setOpen] = useState(false);
-  const delWorkout = useWorkouts((state) => state.deleteWorkout);
+  const delWorkout = useWorkoutStore((state) => state.deleteWorkout);
 
   return (
     <div className="flex justify-center mt-10">
       <Card className="wrapper">
         <CardHeader>
-          <CardTitle className="text-2xl font-semibold">Next exercises</CardTitle>
+          <CardTitle className="text-2xl font-semibold">
+            Next exercises
+          </CardTitle>
           <CardAction>
             <Button onClick={() => setOpen(true)}>
               <PlusIcon />
@@ -70,7 +71,11 @@ export function ExerciseList({workoutId}: ExerciseListProps) {
           )}
         </CardContent>
       </Card>
-      <CreateExerciseDialog workoutId={workoutId} open={open} onOpenChange={setOpen} />
+      <CreateExerciseDialog
+        workoutId={workoutId}
+        open={open}
+        onOpenChange={setOpen}
+      />
     </div>
   );
 }

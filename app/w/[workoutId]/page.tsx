@@ -8,6 +8,7 @@ import {
 import { CreateExerciseDialog } from "@/components/create-exercise-dialog";
 import { Suspense, use, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useWorkoutStore } from "@/lib/workout";
 
 export default function WorkoutViewer({
   params,
@@ -15,6 +16,9 @@ export default function WorkoutViewer({
   params: Promise<{ workoutId: string }>;
 }) {
   const { workoutId } = use(params);
+  const workouts = useWorkoutStore((state) => state.workouts);
+  const workout = workouts.find((item) => item.id === workoutId);
+
   const [open, setOpen] = useState(false);
   return (
     <div className="min-h-[calc(100vh-5.75rem)] flex justify-center items-center">

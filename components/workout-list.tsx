@@ -9,16 +9,16 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PlusIcon, Trash2Icon } from "lucide-react";
-import { useWorkouts } from "@/lib/workout";
+import { useWorkoutStore } from "@/lib/workout";
 import { EmptyWorkout } from "@/components/empty-workouts";
 import { CreateWorkoutDialog } from "./create-workout-dialog";
 import { useState } from "react";
 import Link from "next/link";
 
 export function WorkoutList() {
-  const workouts = useWorkouts((state) => state.workouts);
+  const workouts = useWorkoutStore((state) => state.workouts);
   const [open, setOpen] = useState(false);
-  const delWorkout = useWorkouts((state) => state.deleteWorkout);
+  const delWorkout = useWorkoutStore((state) => state.deleteWorkout);
 
   return (
     <div className="flex justify-center mt-10">

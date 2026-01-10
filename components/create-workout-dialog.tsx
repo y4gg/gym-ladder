@@ -11,7 +11,7 @@ import { Button } from "./ui/button";
 import { PlusIcon } from "lucide-react";
 import { Input } from "./ui/input";
 import { useState } from "react";
-import { useWorkouts } from "@/lib/workout";
+import { useWorkoutStore } from "@/lib/workout";
 import { Label } from "./ui/label";
 
 interface props {
@@ -22,10 +22,10 @@ interface props {
 export function CreateWorkoutDialog({ open, onOpenChange }: props) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const { newWorkout } = useWorkouts();
+  const { addWorkout } = useWorkoutStore();
 
   const handleCreate = () => {
-    newWorkout({
+    addWorkout({
       name: name.trim(),
       description: description.trim(),
     });
