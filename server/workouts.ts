@@ -4,6 +4,6 @@ function getWorkouts() {}
 
 function addWorkout() {}
 
-function deleteWorkout() {}
+function removeWorkout() {}
 
 function editWorkout() {}

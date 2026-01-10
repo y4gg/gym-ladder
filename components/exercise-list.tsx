@@ -21,7 +21,7 @@ interface ExerciseListProps {
 
 export function ExerciseList({ workout }: ExerciseListProps) {
   const [open, setOpen] = useState(false);
-  const delWorkout = useWorkoutStore((state) => state.deleteWorkout);
+  const removeWorkout = useWorkoutStore((state) => state.removeWorkout);
 
   return (
     <div className="flex justify-center mt-10">
@@ -57,7 +57,7 @@ export function ExerciseList({ workout }: ExerciseListProps) {
                     <Button>View</Button>
                   </Link>
                   <Button
-                    onClick={() => delWorkout(workout.id)}
+                    onClick={() => removeWorkout(workout.id)}
                     size={"icon"}
                     variant={"destructive"}
                   >

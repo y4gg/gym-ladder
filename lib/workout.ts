@@ -19,7 +19,7 @@ export interface Exercise extends NewExercise {
 
 export interface NewWorkout {
   name: string;
-  notes: string | null;
+  description: string | null;
 }
 
 export interface Workout extends NewWorkout {
@@ -119,7 +119,7 @@ function createWorkout(workout: NewWorkout): Workout {
   return {
     id: createId(),
     name: workout.name,
-    notes: workout.notes,
+    description: workout.description,
     createdAt: new Date(),
     updatedAt: new Date(),
     exercises: [],
