@@ -1,29 +1,30 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
 import { createId } from "@paralleldrive/cuid2";
+import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
 
 export interface NewExercise {
+  id: string;
   name: string;
+  notes: string | null;
+  sets: number;
   repsMin: number;
   repsMax: number | null;
-  sets: number;
   weight: number;
-  notes: string | null;
 }
 
 export interface Exercise extends NewExercise {
-  id: string;
-  createdAt: Date;
   updatedAt: Date;
+  createdAt: Date;
 }
 
-interface NewWorkout {
+export interface NewWorkout {
   name: string;
-  description: string | null;
+  notes: string | null;
 }
 
-interface Workout extends NewWorkout {
+export interface Workout extends NewWorkout {
   id: string;
+
   createdAt: Date;
   updatedAt: Date;
   exercises: Exercise[];
@@ -31,74 +32,52 @@ interface Workout extends NewWorkout {
 
 interface WorkoutStore {
   workouts: Workout[];
-  newWorkout: (workout: NewWorkout) => void;
-  deleteWorkout: (id: string) => void;
-  editWorkout: (id: string, workout: Partial<Workout>) => void;
-  getExercises: (workoutId: string) => void
+  addWorkout: (workout: NewWorkout) => void;
+  removeWorkout: (id: string) => void;
+  updateWorkout: (id: string, workout: Partial<NewWorkout>) => void;
+
   addExerciseToWorkout: (workoutId: string, exercise: NewExercise) => void;
-  deleteExerciseFromWorkout: (workoutId: string, exerciseId: string) => void;
+  removeExerciseFromWorkout: (workoutId: string, exerciseId: string) => void;
   updateExerciseInWorkout: (
     workoutId: string,
     exerciseId: string,
-    exercise: Partial<Exercise>
+    exercise: Partial<NewExercise>
   ) => void;
 }
 
-export const useWorkouts = create<WorkoutStore>()(
+export const useWorkoutStore = create<WorkoutStore>()(
   persist(
     (set) => ({
       workouts: [],
-      newWorkout: (workout: NewWorkout) => {
-        const newWorkout: Workout = {
-          id: createId(),
-          name: workout.name,
-          description: workout.description,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          exercises: [],
-        };
+      addWorkout: (workout) =>
         set((state) => ({
-          workouts: [...state.workouts, newWorkout],
-        }));
-      },
-      deleteWorkout: (id: string) => {
+          workouts: [...state.workouts, createWorkout(workout)],
+        })),
+      removeWorkout: (id) =>
         set((state) => ({
           workouts: state.workouts.filter((workout) => workout.id !== id),
-        }));
-      },
-      editWorkout: (id: string, workout: Partial<Workout>) => {
+        })),
+      updateWorkout: (id, workout) =>
         set((state) => ({
           workouts: state.workouts.map((w) =>
             w.id === id ? { ...w, ...workout, updatedAt: new Date() } : w
           ),
-        }));
-      },
-      getExercises: (workoutId) => {},
-      addExerciseToWorkout: (workoutId, exercise) => {
-        const newExercise: Exercise = {
-          id: createId(),
-          name: exercise.name,
-          repsMin: exercise.repsMin,
-          repsMax: exercise.repsMax,
-          sets: exercise.sets,
-          weight: exercise.weight,
-          notes: exercise.notes,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        };
+        })),
+
+      // Exercise part (doin this comment so prettier will not format this)
+      addExerciseToWorkout: (workoutId, exercise) =>
         set((state) => ({
           workouts: state.workouts.map((workout) =>
             workout.id === workoutId
               ? {
                   ...workout,
-                  exercises: [...workout.exercises, newExercise],
+                  exercises: [...workout.exercises, createExercise(exercise)],
                   updatedAt: new Date(),
                 }
               : workout
           ),
-        }));
-      },
-      deleteExerciseFromWorkout: (workoutId, exerciseId) => {
+        })),
+      removeExerciseFromWorkout: (workoutId, exerciseId) =>
         set((state) => ({
           workouts: state.workouts.map((workout) =>
             workout.id === workoutId
@@ -107,13 +86,11 @@ export const useWorkouts = create<WorkoutStore>()(
                   exercises: workout.exercises.filter(
                     (e) => e.id !== exerciseId
                   ),
-                  updatedAt: new Date(),
                 }
               : workout
           ),
-        }));
-      },
-      updateExerciseInWorkout: (workoutId, exerciseId, exercise) => {
+        })),
+      updateExerciseInWorkout: (workoutId, exerciseId, exercise) =>
         set((state) => ({
           workouts: state.workouts.map((workout) =>
             workout.id === workoutId
@@ -128,26 +105,37 @@ export const useWorkouts = create<WorkoutStore>()(
                 }
               : workout
           ),
-        }));
-      },
+        })),
     }),
+
     {
-      name: "workout-storage",
-      onRehydrateStorage: () => (state) => {
-        if (state?.workouts) {
-          // Convert date strings back to Date objects
-          state.workouts = state.workouts.map((workout) => ({
-            ...workout,
-            createdAt: new Date(workout.createdAt),
-            updatedAt: new Date(workout.updatedAt),
-            exercises: workout.exercises.map((exercise) => ({
-              ...exercise,
-              createdAt: new Date(exercise.createdAt),
-              updatedAt: new Date(exercise.updatedAt),
-            })),
-          }));
-        }
-      },
+      name: "exercise-store",
+      storage: createJSONStorage(() => localStorage),
     }
   )
 );
+
+function createWorkout(workout: NewWorkout): Workout {
+  return {
+    id: createId(),
+    name: workout.name,
+    notes: workout.notes,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    exercises: [],
+  };
+}
+
+function createExercise(exercise: NewExercise): Exercise {
+  return {
+    id: createId(),
+    name: exercise.name,
+    notes: exercise.notes,
+    sets: exercise.sets,
+    repsMin: exercise.repsMin,
+    repsMax: exercise.repsMax,
+    weight: exercise.weight,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+}
