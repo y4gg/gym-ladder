@@ -141,10 +141,18 @@ export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
         </CardContent>
         <CardFooter>
           <div className="flex w-full gap-2">
-            <Button className="flex-1" onClick={() => previous()}>
+            <Button
+              className="flex-1"
+              onClick={() => previous()}
+              disabled={exercisePos == 0}
+            >
               Back
             </Button>
-            <Button className="flex-1" onClick={() => next()}>
+            <Button
+              className="flex-1"
+              onClick={() => next()}
+              disabled={exercisePos + 1 == exercises?.length}
+            >
               Next
             </Button>
           </div>

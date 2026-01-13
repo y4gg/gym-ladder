@@ -5,6 +5,8 @@ import { CreateExerciseDialog } from "@/components/create-exercise-dialog";
 import { use, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ExerciseDisplay } from "@/components/exercise-display";
+import { useWorkoutStore } from "@/lib/workout";
+import { EmptyExercises } from "@/components/empty-exercises";
 
 export default function WorkoutViewer({
   params,
@@ -12,6 +14,23 @@ export default function WorkoutViewer({
   params: Promise<{ workoutId: string }>;
 }) {
   const { workoutId } = use(params);
+  const workout = useWorkoutStore().workouts.find(
+    (workout) => workout.id == workoutId
+  );
+
+  if (workout?.exercises.length == 0) {
+    const [open, setOpen] = useState(false);
+    return (
+      <div className="flex w-full justify-center mt-10">
+        <EmptyExercises onCreateExercise={() => setOpen(true)} />
+        <CreateExerciseDialog
+          open={open}
+          onOpenChange={setOpen}
+          workoutId={workoutId}
+        />
+      </div>
+    );
+  }
 
   const [open, setOpen] = useState(false);
   return (

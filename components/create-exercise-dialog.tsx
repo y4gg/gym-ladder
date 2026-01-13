@@ -24,9 +24,9 @@ export function CreateExerciseDialog({ workoutId, open, onOpenChange }: props) {
   const { addExerciseToWorkout } = useWorkoutStore();
   const [exercise, setExercise] = useState<NewExercise>({
     name: "",
-    repsMin: 0,
-    repsMax: null,
-    sets: 0,
+    repsMin: 8,
+    repsMax: 12,
+    sets: 3,
     weight: 0,
     notes: "",
   });
@@ -60,9 +60,9 @@ export function CreateExerciseDialog({ workoutId, open, onOpenChange }: props) {
 
     setExercise({
       name: "",
-      repsMin: 0,
-      repsMax: null,
-      sets: 0,
+      repsMin: 8,
+      repsMax: 12,
+      sets: 3,
       weight: 0,
       notes: "",
     });
@@ -93,6 +93,7 @@ export function CreateExerciseDialog({ workoutId, open, onOpenChange }: props) {
         <Label className="mt-2">Reps Min</Label>
         <Input
           type="number"
+          min={"1"}
           required
           placeholder={"8"}
           value={exercise.repsMin}
@@ -107,6 +108,7 @@ export function CreateExerciseDialog({ workoutId, open, onOpenChange }: props) {
         />
         <Label className="mt-2">Sets</Label>
         <Input
+          min={"1"}
           type="number"
           required
           placeholder={"3"}
@@ -117,7 +119,6 @@ export function CreateExerciseDialog({ workoutId, open, onOpenChange }: props) {
         <Input
           type="number"
           required
-          placeholder={"60"}
           value={exercise.weight}
           onChange={(e) => updateExercise("weight", e.target.value)}
         />
