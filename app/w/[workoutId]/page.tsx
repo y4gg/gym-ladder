@@ -4,6 +4,7 @@ import { ExerciseList } from "@/components/exercise-list";
 import { CreateExerciseDialog } from "@/components/create-exercise-dialog";
 import { use, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { ExerciseDisplay } from "@/components/exercise-display";
 
 export default function WorkoutViewer({
   params,
@@ -15,9 +16,11 @@ export default function WorkoutViewer({
   const [open, setOpen] = useState(false);
   return (
     <div className="flex w-full justify-center mt-10">
-      <div className="mt-10 grid grid-cols-5 h-100 big-wrapper">
-        <div className="col-span-2 w-full"></div>
+      <div className="mt-10 grid grid-cols-7 h-100 big-wrapper gap-4">
         <div className="col-span-3">
+          <ExerciseDisplay workoutId={workoutId} />
+        </div>
+        <div className="col-span-4">
           <div className="flex justify-between mb-2">
             <h1 className="font-semibold text-2xl">Next up:</h1>
             <Button onClick={() => setOpen(true)}>Create Exercise</Button>
