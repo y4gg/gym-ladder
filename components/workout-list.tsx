@@ -21,7 +21,7 @@ export function WorkoutList() {
   const removeWorkout = useWorkoutStore((state) => state.removeWorkout);
 
   return (
-    <div className="flex justify-center mt-10">
+    <div className="flex justify-center mt-4 md:mt-10">
       <Card className="wrapper">
         <CardHeader>
           <CardTitle className="text-2xl font-semibold">Workout List</CardTitle>
