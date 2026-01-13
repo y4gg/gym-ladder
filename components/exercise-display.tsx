@@ -27,6 +27,8 @@ export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
       ? true
       : false;
 
+  const { updateExerciseInWorkout } = useWorkoutStore();
+
   return (
     <Card className="w-full">
       <CardHeader>
@@ -70,7 +72,14 @@ export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
           <Textarea
             placeholder="Add a note..."
             value={note}
-            onChange={(e) => setNote(e.target.value)}
+            onChange={(e) => {
+              setNote(e.target.value);
+              if (currentExercise?.id) {
+                updateExerciseInWorkout(workoutId, currentExercise.id, {
+                  notes: e.target.value,
+                });
+              }
+            }}
             className="w-full"
           />
         </div>

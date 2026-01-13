@@ -22,12 +22,6 @@ export function EmptyWorkout() {
           your first workout.
         </EmptyDescription>
       </EmptyHeader>
-      {/* <EmptyContent>
-        <div className="flex gap-2">
-          <Button>Create Project</Button>
-          <Button variant="outline">Import Project</Button>
-        </div>
-      </EmptyContent> */}
     </Empty>
   );
 }
