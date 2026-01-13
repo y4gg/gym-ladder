@@ -33,6 +33,7 @@ export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
     previous,
   } = useExercisePosStore();
   const currentExercise = exercises?.at(exercisePos);
+  const nextExercises = exercises?.slice(exercisePos + 1);
   const correctMaxReps =
     currentExercise?.repsMax &&
     currentExercise?.repsMax > currentExercise?.repsMin
@@ -108,14 +109,8 @@ export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
             <Input value={`Current set: ${currentSet}`} disabled />
             <Button
               size={"icon"}
-              onClick={() => {
-                if (currentSet == currentExercise?.sets) {
-                  next();
-                  setCurrentSet(1);
-                } else {
-                  setCurrentSet((prevSet) => prevSet + 1);
-                }
-              }}
+              onClick={() => setCurrentSet((prevSet) => prevSet + 1)}
+              disabled={currentExercise?.sets == currentSet}
             >
               <PlusIcon />
             </Button>
