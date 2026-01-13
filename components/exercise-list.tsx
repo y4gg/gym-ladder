@@ -9,9 +9,17 @@ import {
   ItemActions,
   ItemContent,
   ItemDescription,
-  ItemMedia,
   ItemTitle,
 } from "@/components/ui/item";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { MoreHorizontalIcon } from "lucide-react";
 
 export function ExerciseList({ workoutId }: { workoutId: string }) {
   const exercises = useWorkoutStore(
@@ -29,9 +37,22 @@ export function ExerciseList({ workoutId }: { workoutId: string }) {
           <ItemDescription>{`Sets: ${currentExercise?.sets} | Reps: ${currentExercise?.repsMin}-${currentExercise?.repsMax} | Weight: ${currentExercise?.weight}kg`}</ItemDescription>
         </ItemContent>
         <ItemActions>
-          <Button variant={"outline"} size={"sm"}>
-            Skip to this exercise
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Button variant={"outline"} size={"icon-sm"}>
+                <MoreHorizontalIcon />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className={"w-30s"} align="end">
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>Exercise Actions</DropdownMenuLabel>
+                <DropdownMenuItem>Edit</DropdownMenuItem>
+                <DropdownMenuItem className={"text-red-400"}>
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </ItemActions>
       </Item>
 
@@ -49,6 +70,22 @@ export function ExerciseList({ workoutId }: { workoutId: string }) {
             <Button variant={"outline"} size={"sm"}>
               Skip to this exercise
             </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Button variant={"outline"} size={"icon-sm"}>
+                  <MoreHorizontalIcon />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className={"w-25"} align="end">
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>Exercise Actions</DropdownMenuLabel>
+                  <DropdownMenuItem>Edit</DropdownMenuItem>
+                  <DropdownMenuItem className={"text-red-400"}>
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </ItemActions>
         </Item>
       ))}
