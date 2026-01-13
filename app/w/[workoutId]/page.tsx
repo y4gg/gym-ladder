@@ -38,8 +38,8 @@ export default function WorkoutViewer({
 
   const [open, setOpen] = useState(false);
   return (
-    <div className="flex w-full justify-center mt-10">
-      <div className="mt-10 grid grid-cols-7 h-100 big-wrapper gap-4">
+    <div className="flex w-full justify-center mt-4 md:mt-10">
+      <div className="md:grid md:grid-cols-7 h-100 big-wrapper gap-4 mb-4">
         <div className="col-span-3">
           <ExerciseDisplay workoutId={workoutId} />
         </div>
