@@ -9,9 +9,18 @@ import {
 } from "@/components/ui/card";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { PlusIcon, MinusIcon } from "lucide-react";
+import { PlusIcon, MinusIcon, MoreHorizontalIcon } from "lucide-react";
 import { Suspense, useState } from "react";
 import { Textarea } from "./ui/textarea";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { EditExerciseDialog } from "./edit-exercise-dialog";
 
 export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
   const [currentSet, setCurrentSet] = useState(1);
@@ -29,8 +38,11 @@ export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
     currentExercise?.repsMax > currentExercise?.repsMin
       ? true
       : false;
-
-  const { updateExerciseInWorkout } = useWorkoutStore();
+  const { updateExerciseInWorkout, removeExerciseFromWorkout } =
+    useWorkoutStore();
+  const [editingExercisePos, setEditingExercisePos] = useState<number | null>(
+    null
+  );
 
   return (
     <Suspense>
@@ -41,20 +53,56 @@ export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className={`flex w-full ${correctMaxReps ? "gap-1" : "gap-2"}`}>
+          <div className={"flex w-full gap-2"}>
             <Input
               className="flex-1"
               disabled
-              defaultValue={`Weight: ${currentExercise?.weight}kg`}
+              value={`Weight: ${currentExercise?.weight}kg`}
             />
             <Input
               className="flex-1"
               disabled
-              defaultValue={`${correctMaxReps ? "Min" : ""}Reps: ${
+              value={`${correctMaxReps ? "Min" : ""}Reps: ${
                 currentExercise?.repsMin
               }`}
             />
-            {correctMaxReps ? <Input className="flex-1" disabled /> : null}
+            {correctMaxReps ? (
+              <Input
+                className="flex-1"
+                disabled
+                value={`MaxReps: ${currentExercise?.repsMax}`}
+              />
+            ) : null}
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Button variant={"outline"} size={"icon"}>
+                  <MoreHorizontalIcon />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className={"w-30s"} align="end">
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>Exercise Actions</DropdownMenuLabel>
+                  <DropdownMenuItem
+                    onClick={() => setEditingExercisePos(exercisePos)}
+                  >
+                    Edit
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className={"text-red-400"}
+                    onClick={() => {
+                      if (currentExercise) {
+                        removeExerciseFromWorkout(
+                          workoutId,
+                          currentExercise.id
+                        );
+                      }
+                    }}
+                  >
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
           <div className={"flex w-full gap-1 mt-3"}>
             <Input value={`Current set: ${currentSet}`} disabled />
@@ -100,6 +148,19 @@ export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
           </div>
         </CardFooter>
       </Card>
+
+      {editingExercisePos !== null && (
+        <EditExerciseDialog
+          workoutId={workoutId}
+          exercisePos={editingExercisePos}
+          open={editingExercisePos !== null}
+          onOpenChange={(open) => {
+            if (!open) {
+              setEditingExercisePos(null);
+            }
+          }}
+        />
+      )}
     </Suspense>
   );
 }
