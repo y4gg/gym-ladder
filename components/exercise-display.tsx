@@ -33,7 +33,6 @@ export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
     previous,
   } = useExercisePosStore();
   const currentExercise = exercises?.at(exercisePos);
-  const nextExercises = exercises?.slice(exercisePos + 1);
   const correctMaxReps =
     currentExercise?.repsMax &&
     currentExercise?.repsMax > currentExercise?.repsMin

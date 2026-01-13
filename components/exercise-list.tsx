@@ -30,62 +30,70 @@ export function ExerciseList({ workoutId }: { workoutId: string }) {
   const { removeExerciseFromWorkout } = useWorkoutStore();
   const exercisePos = useExercisePosStore((state) => state.currentExercise);
   const setCurrentExercise = useExercisePosStore((state) => state.setCurrent);
-  const currentExercise = exercises?.at(exercisePos);
-  const nextExercises = exercises?.slice(exercisePos + 1);
+  const currentExercise = exercises?.at(exercisePos + 1);
+  const nextExercises = exercises?.slice(exercisePos + 2);
   const [editingExercisePos, setEditingExercisePos] = useState<number | null>(
     null
   );
 
   return (
     <div>
-      <Item variant={"muted"}>
-        <ItemContent>
-          <ItemTitle className="text-xl">{currentExercise?.name}</ItemTitle>
-          <ItemDescription>
-            {`Sets: ${currentExercise?.sets} | Reps: ${
-              currentExercise?.repsMin
-            }${
-              currentExercise?.repsMax &&
-              Number(currentExercise.repsMax) > Number(currentExercise.repsMin)
-                ? `-${currentExercise?.repsMax}`
-                : currentExercise?.repsMax
-                ? `x${currentExercise?.repsMax}`
-                : ""
-            } | Weight: ${currentExercise?.weight}kg`}
-          </ItemDescription>
-        </ItemContent>
-        <ItemActions>
-          <DropdownMenu>
-            <DropdownMenuTrigger>
-              <Button variant={"outline"} size={"icon-sm"}>
-                <MoreHorizontalIcon />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className={"w-30s"} align="end">
-              <DropdownMenuGroup>
-                <DropdownMenuLabel>Exercise Actions</DropdownMenuLabel>
-                <DropdownMenuItem
-                  onClick={() => setEditingExercisePos(exercisePos)}
-                >
-                  Edit
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className={"text-red-400"}
-                  onClick={() => {
-                    if (currentExercise) {
-                      removeExerciseFromWorkout(workoutId, currentExercise.id);
-                    }
-                  }}
-                >
-                  Delete
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </ItemActions>
-      </Item>
+      {exercises && exercises.length == exercisePos + 1 ? null : (
+        <Item variant={"muted"}>
+          <ItemContent>
+            <ItemTitle className="text-xl">{currentExercise?.name}</ItemTitle>
+            <ItemDescription>
+              {`Sets: ${currentExercise?.sets} | Reps: ${
+                currentExercise?.repsMin
+              }${
+                currentExercise?.repsMax &&
+                Number(currentExercise.repsMax) >
+                  Number(currentExercise.repsMin)
+                  ? `-${currentExercise?.repsMax}`
+                  : currentExercise?.repsMax
+                  ? `x${currentExercise?.repsMax}`
+                  : ""
+              } | Weight: ${currentExercise?.weight}kg`}
+            </ItemDescription>
+          </ItemContent>
+          <ItemActions>
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Button variant={"outline"} size={"icon-sm"}>
+                  <MoreHorizontalIcon />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className={"w-30s"} align="end">
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>Exercise Actions</DropdownMenuLabel>
+                  <DropdownMenuItem
+                    onClick={() => setEditingExercisePos(exercisePos)}
+                  >
+                    Edit
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className={"text-red-400"}
+                    onClick={() => {
+                      if (currentExercise) {
+                        removeExerciseFromWorkout(
+                          workoutId,
+                          currentExercise.id
+                        );
+                      }
+                    }}
+                  >
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </ItemActions>
+        </Item>
+      )}
 
-      <Separator className={"my-4"} />
+      {exercises && exercises.length <= exercisePos + 2 ? null : (
+        <Separator className={"my-4"} />
+      )}
 
       {nextExercises?.map((exercise, index) => {
         const exerciseIndex = exercisePos + 1 + index;
