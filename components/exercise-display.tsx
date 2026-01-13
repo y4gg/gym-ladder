@@ -108,7 +108,14 @@ export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
             <Input value={`Current set: ${currentSet}`} disabled />
             <Button
               size={"icon"}
-              onClick={() => setCurrentSet((prevSet) => prevSet + 1)}
+              onClick={() => {
+                if (currentSet == currentExercise?.sets) {
+                  next();
+                  setCurrentSet(1);
+                } else {
+                  setCurrentSet((prevSet) => prevSet + 1);
+                }
+              }}
             >
               <PlusIcon />
             </Button>
