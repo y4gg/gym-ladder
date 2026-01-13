@@ -18,7 +18,11 @@ export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
   const exercises = useWorkoutStore(
     (state) => state.workouts.find((find) => find.id === workoutId)?.exercises
   );
-  const exercisePos = useExercisePosStore((state) => state.currentExercise);
+  const {
+    currentExercise: exercisePos,
+    next,
+    previous,
+  } = useExercisePosStore();
   const currentExercise = exercises?.at(exercisePos);
   const correctMaxReps =
     currentExercise?.repsMax &&
@@ -73,7 +77,7 @@ export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
           <div className="mt-3">
             <Textarea
               placeholder="Add a note..."
-              value={currentExercise?.notes}
+              value={currentExercise?.notes ?? ""}
               onChange={(e) => {
                 if (currentExercise?.id) {
                   updateExerciseInWorkout(workoutId, currentExercise.id, {
@@ -87,8 +91,12 @@ export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
         </CardContent>
         <CardFooter>
           <div className="flex w-full gap-2">
-            <Button className="flex-1">Back</Button>
-            <Button className="flex-1">Next</Button>
+            <Button className="flex-1" onClick={() => previous()}>
+              Back
+            </Button>
+            <Button className="flex-1" onClick={() => next()}>
+              Next
+            </Button>
           </div>
         </CardFooter>
       </Card>
