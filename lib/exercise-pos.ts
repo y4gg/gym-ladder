@@ -10,10 +10,10 @@ export const useExercisePosStore = create<exercisePosStore>((set) => ({
   currentExercise: 0,
   next: () =>
     set((state) => ({
-      currentExercise: state.currentExercise++,
+      currentExercise: state.currentExercise + 1,
     })),
   previous: () =>
     set((state) => ({
-      currentExercise: state.currentExercise--,
+      currentExercise: state.currentExercise - 1,
     })),
 }));
