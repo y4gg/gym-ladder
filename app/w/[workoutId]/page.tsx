@@ -18,7 +18,11 @@ export default function WorkoutViewer({
     (workout) => workout.id == workoutId
   );
 
-  if (workout?.exercises.length == 0) {
+  if (!workout) {
+    return null;
+  }
+
+  if (workout.exercises.length == 0) {
     const [open, setOpen] = useState(false);
     return (
       <div className="flex w-full justify-center mt-10">
