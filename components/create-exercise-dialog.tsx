@@ -21,6 +21,7 @@ interface props {
 }
 
 export function CreateExerciseDialog({ workoutId, open, onOpenChange }: props) {
+  const { addExerciseToWorkout } = useWorkoutStore();
   const [exercise, setExercise] = useState<NewExercise>({
     name: "",
     repsMin: 0,
@@ -29,7 +30,6 @@ export function CreateExerciseDialog({ workoutId, open, onOpenChange }: props) {
     weight: 0,
     notes: "",
   });
-  const { addExerciseToWorkout } = useWorkoutStore();
 
   const updateExercise = (field: keyof typeof exercise, value: string) => {
     setExercise((prev) => ({ ...prev, [field]: value }));

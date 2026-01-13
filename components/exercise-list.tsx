@@ -9,73 +9,20 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PlusIcon, Trash2Icon } from "lucide-react";
-import { Workout } from "@/lib/workout";
+import { useWorkoutStore } from "@/lib/workout";
 import { EmptyWorkout } from "@/components/empty-workouts";
-import { CreateExerciseDialog } from "./create-exercise-dialog";
+import { CreateWorkoutDialog } from "./create-workout-dialog";
 import { useState } from "react";
 import Link from "next/link";
 
-interface ExerciseListProps {
-  workout: Workout;
-}
-
-export function ExerciseList({ workout }: ExerciseListProps) {
-  const [open, setOpen] = useState(false);
-  const removeWorkout = useWorkoutStore((state) => state.removeWorkout);
+export function ExerciseList({ workoutId }: { workoutId: string }) {
+  const exercises = useWorkoutStore(
+    (state) => state.workouts.find((find) => find.id === workoutId)?.exercises
+  );
 
   return (
-    <div className="flex justify-center mt-10">
-      <Card className="wrapper">
-        <CardHeader>
-          <CardTitle className="text-2xl font-semibold">
-            Next exercises
-          </CardTitle>
-          <CardAction>
-            <Button onClick={() => setOpen(true)}>
-              <PlusIcon />
-              Create exercise
-            </Button>
-          </CardAction>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-4">
-          {workouts.length != 0 ? (
-            workouts.map((workout) => (
-              <Card
-                key={workout.id}
-                className="flex flex-row justify-between p-6"
-              >
-                <div>
-                  <h1 className="font-medium text-xl">{workout.name}</h1>
-                  <p className="text-gray-400">
-                    {workout.description
-                      ? workout.description
-                      : "No description"}
-                  </p>
-                </div>
-                <div className="flex min-h-full items-center">
-                  <Link href={"/w/" + workout.id}>
-                    <Button>View</Button>
-                  </Link>
-                  <Button
-                    onClick={() => removeWorkout(workout.id)}
-                    size={"icon"}
-                    variant={"destructive"}
-                  >
-                    <Trash2Icon />
-                  </Button>
-                </div>
-              </Card>
-            ))
-          ) : (
-            <EmptyWorkout />
-          )}
-        </CardContent>
-      </Card>
-      <CreateExerciseDialog
-        workoutId={workoutId}
-        open={open}
-        onOpenChange={setOpen}
-      />
+    <div>
+      <Card></Card>
     </div>
   );
 }

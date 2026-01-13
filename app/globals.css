@@ -126,6 +126,10 @@
 }
 
 @layer components {
+  .big-wrapper {
+    width: min(65em, 95%);
+  }
+
   .wrapper {
     width: min(50em, 95%);
   }

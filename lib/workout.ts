@@ -3,7 +3,6 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 export interface NewExercise {
-  id: string;
   name: string;
   notes: string | null;
   sets: number;
@@ -13,6 +12,8 @@ export interface NewExercise {
 }
 
 export interface Exercise extends NewExercise {
+  id: string;
+
   updatedAt: Date;
   createdAt: Date;
 }
