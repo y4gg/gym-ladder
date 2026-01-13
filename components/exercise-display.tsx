@@ -11,9 +11,11 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { PlusIcon, MinusIcon } from "lucide-react";
 import { useState } from "react";
+import { Textarea } from "./ui/textarea";
 
 export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
   const [currentSet, setCurrentSet] = useState(1);
+  const [note, setNote] = useState("");
   const exercises = useWorkoutStore(
     (state) => state.workouts.find((find) => find.id === workoutId)?.exercises
   );
@@ -63,6 +65,14 @@ export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
           >
             <MinusIcon />
           </Button>
+        </div>
+        <div className="mt-3">
+          <Textarea
+            placeholder="Add a note..."
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            className="w-full"
+          />
         </div>
       </CardContent>
       <CardFooter>
