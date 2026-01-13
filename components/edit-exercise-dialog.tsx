@@ -57,7 +57,21 @@ export function EditExerciseDialog({
     const [formState, setFormState] = useState<NewExercise>(getInitialState);
 
     const updateField = (field: keyof NewExercise, value: string) => {
-      setFormState((prev) => ({ ...prev, [field]: value }));
+      setFormState((prev) => {
+        // Convert numeric fields to numbers
+        const numericFields: (keyof NewExercise)[] = [
+          "sets",
+          "repsMin",
+          "repsMax",
+          "weight",
+        ];
+        if (numericFields.includes(field)) {
+          const numValue =
+            value === "" ? (field === "repsMax" ? null : 0) : Number(value);
+          return { ...prev, [field]: numValue };
+        }
+        return { ...prev, [field]: value };
+      });
     };
 
     const handleUpdate = () => {

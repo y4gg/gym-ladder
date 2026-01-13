@@ -25,14 +25,22 @@ export function CreateExerciseDialog({ workoutId, open, onOpenChange }: props) {
   const [exercise, setExercise] = useState<NewExercise>({
     name: "",
     repsMin: 0,
-    repsMax: 0,
+    repsMax: null,
     sets: 0,
     weight: 0,
     notes: "",
   });
 
   const updateExercise = (field: keyof typeof exercise, value: string) => {
-    setExercise((prev) => ({ ...prev, [field]: value }));
+    setExercise((prev) => {
+      // Convert numeric fields to numbers
+      const numericFields: (keyof NewExercise)[] = ['sets', 'repsMin', 'repsMax', 'weight'];
+      if (numericFields.includes(field)) {
+        const numValue = value === '' ? (field === 'repsMax' ? null : 0) : Number(value);
+        return { ...prev, [field]: numValue };
+      }
+      return { ...prev, [field]: value };
+    });
   };
 
   const handleCreate = () => {
@@ -48,7 +56,7 @@ export function CreateExerciseDialog({ workoutId, open, onOpenChange }: props) {
     setExercise({
       name: "",
       repsMin: 0,
-      repsMax: 0,
+      repsMax: null,
       sets: 0,
       weight: 0,
       notes: "",

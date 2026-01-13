@@ -40,7 +40,18 @@ export function ExerciseList({ workoutId }: { workoutId: string }) {
       <Item variant={"muted"}>
         <ItemContent>
           <ItemTitle className="text-xl">{currentExercise?.name}</ItemTitle>
-          <ItemDescription>{`Sets: ${currentExercise?.sets} | Reps: ${currentExercise?.repsMin}-${currentExercise?.repsMax} | Weight: ${currentExercise?.weight}kg`}</ItemDescription>
+          <ItemDescription>
+            {`Sets: ${currentExercise?.sets} | Reps: ${
+              currentExercise?.repsMin
+            }${
+              currentExercise?.repsMax &&
+              Number(currentExercise.repsMax) > Number(currentExercise.repsMin)
+                ? `-${currentExercise?.repsMax}`
+                : currentExercise?.repsMax
+                ? `x${currentExercise?.repsMax}`
+                : ""
+            } | Weight: ${currentExercise?.weight}kg`}
+          </ItemDescription>
         </ItemContent>
         <ItemActions>
           <DropdownMenu>
@@ -82,7 +93,12 @@ export function ExerciseList({ workoutId }: { workoutId: string }) {
             <ItemContent>
               <ItemTitle className="text-lg">{exercise.name}</ItemTitle>
               <ItemDescription>
-                {`Sets: ${exercise.sets} | Reps: ${exercise.repsMin}-${exercise.repsMax} | Weight: ${exercise.weight}kg`}
+                {`Sets: ${exercise.sets} | Reps: ${exercise.repsMin}${
+                  exercise.repsMax &&
+                  Number(exercise.repsMax) > Number(exercise.repsMin)
+                    ? `-${exercise.repsMax}`
+                    : ""
+                } | Weight: ${exercise.weight}kg`}
               </ItemDescription>
             </ItemContent>
             <ItemActions>
