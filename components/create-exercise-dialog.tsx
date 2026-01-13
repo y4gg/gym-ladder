@@ -33,10 +33,15 @@ export function CreateExerciseDialog({ workoutId, open, onOpenChange }: props) {
 
   const updateExercise = (field: keyof typeof exercise, value: string) => {
     setExercise((prev) => {
-      // Convert numeric fields to numbers
-      const numericFields: (keyof NewExercise)[] = ['sets', 'repsMin', 'repsMax', 'weight'];
+      const numericFields: (keyof NewExercise)[] = [
+        "sets",
+        "repsMin",
+        "repsMax",
+        "weight",
+      ];
       if (numericFields.includes(field)) {
-        const numValue = value === '' ? (field === 'repsMax' ? null : 0) : Number(value);
+        const numValue =
+          value === "" ? (field === "repsMax" ? null : 0) : Number(value);
         return { ...prev, [field]: numValue };
       }
       return { ...prev, [field]: value };
