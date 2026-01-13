@@ -18,13 +18,19 @@ export default function WorkoutViewer({
       <div className="mt-10 grid grid-cols-5 h-100 big-wrapper">
         <div className="col-span-2 w-full"></div>
         <div className="col-span-3">
-          <div>
+          <div className="flex justify-between mb-2">
             <h1 className="font-semibold text-2xl">Next up:</h1>
-            <CreateExerciseDialog />
+            <Button onClick={() => setOpen(true)}>Create Exercise</Button>
           </div>
           <ExerciseList workoutId={workoutId} />
         </div>
       </div>
+
+      <CreateExerciseDialog
+        open={open}
+        onOpenChange={setOpen}
+        workoutId={workoutId}
+      />
     </div>
   );
 }
