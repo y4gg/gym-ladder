@@ -89,7 +89,7 @@ export function ExerciseList({ workoutId }: { workoutId: string }) {
       {nextExercises?.map((exercise, index) => {
         const exerciseIndex = exercisePos + 1 + index;
         return (
-          <Item key={exercise.id} variant={"outline"}>
+          <Item key={exercise.id} variant={"outline"} className="mb-2">
             <ItemContent>
               <ItemTitle className="text-lg">{exercise.name}</ItemTitle>
               <ItemDescription>
