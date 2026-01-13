@@ -29,6 +29,7 @@ export function ExerciseList({ workoutId }: { workoutId: string }) {
   );
   const { removeExerciseFromWorkout } = useWorkoutStore();
   const exercisePos = useExercisePosStore((state) => state.currentExercise);
+  const setCurrentExercise = useExercisePosStore((state) => state.setCurrent);
   const currentExercise = exercises?.at(exercisePos);
   const nextExercises = exercises?.slice(exercisePos + 1);
   const [editingExercisePos, setEditingExercisePos] = useState<number | null>(
@@ -102,7 +103,11 @@ export function ExerciseList({ workoutId }: { workoutId: string }) {
               </ItemDescription>
             </ItemContent>
             <ItemActions>
-              <Button variant={"outline"} size={"sm"}>
+              <Button
+                variant={"outline"}
+                size={"sm"}
+                onClick={() => setCurrentExercise(exerciseIndex)}
+              >
                 Skip to this exercise
               </Button>
               <DropdownMenu>

@@ -4,6 +4,7 @@ interface exercisePosStore {
   currentExercise: number;
   next: () => void;
   previous: () => void;
+  setCurrent: (position: number) => void;
 }
 
 export const useExercisePosStore = create<exercisePosStore>((set) => ({
@@ -16,4 +17,5 @@ export const useExercisePosStore = create<exercisePosStore>((set) => ({
     set((state) => ({
       currentExercise: state.currentExercise - 1,
     })),
+  setCurrent: (position: number) => set({ currentExercise: position }),
 }));
