@@ -14,6 +14,7 @@ export default function WorkoutViewer({
   params: Promise<{ workoutId: string }>;
 }) {
   const { workoutId } = use(params);
+  const [open, setOpen] = useState(false);
   const workout = useWorkoutStore().workouts.find(
     (workout) => workout.id == workoutId
   );
@@ -23,7 +24,6 @@ export default function WorkoutViewer({
   }
 
   if (workout.exercises.length == 0) {
-    const [open, setOpen] = useState(false);
     return (
       <div className="flex w-full justify-center mt-10">
         <EmptyExercises onCreateExercise={() => setOpen(true)} />
@@ -36,7 +36,6 @@ export default function WorkoutViewer({
     );
   }
 
-  const [open, setOpen] = useState(false);
   return (
     <div className="flex w-full justify-center mt-4 md:mt-10">
       <div className="md:grid md:grid-cols-7 h-100 big-wrapper gap-4 mb-4">

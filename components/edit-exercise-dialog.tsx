@@ -13,6 +13,7 @@ import { Input } from "./ui/input";
 import { useState } from "react";
 import { Label } from "./ui/label";
 import { useWorkoutStore, NewExercise } from "@/lib/workout";
+import { useSync } from "@/lib/useSync";
 
 interface props {
   workoutId: string;
@@ -28,6 +29,7 @@ export function EditExerciseDialog({
   onOpenChange,
 }: props) {
   const { updateExerciseInWorkout, workouts } = useWorkoutStore();
+  const { syncSingleWorkout } = useSync();
   const workout = workouts.find((w) => w.id === workoutId);
   const exercise = workout?.exercises.at(exercisePos);
 
@@ -85,6 +87,13 @@ export function EditExerciseDialog({
         weight: formState.weight,
         notes: formState.notes,
       });
+
+      const workout = useWorkoutStore
+        .getState()
+        .workouts.find((w) => w.id === workoutId);
+      if (workout) {
+        syncSingleWorkout(workout);
+      }
 
       onOpenChange(false);
     };

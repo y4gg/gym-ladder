@@ -21,6 +21,7 @@ import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useSync } from "@/lib/useSync";
 
 export function LoginForm({
   className,
@@ -28,6 +29,7 @@ export function LoginForm({
 }: React.ComponentProps<"div">) {
   const { data: session } = authClient.useSession();
   const router = useRouter();
+  const { syncWorkouts } = useSync();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -54,6 +56,16 @@ export function LoginForm({
     }
 
     toast.success("Signed in");
+    toast.loading("Syncing your workouts...", { id: "sync-loading" });
+    try {
+      await syncWorkouts();
+      toast.success("Workouts synced");
+    } catch (error) {
+      console.error("Sync failed:", error);
+      toast.error("Some workouts failed to sync");
+    } finally {
+      toast.dismiss("sync-loading");
+    }
     router.push("/");
   };
 
