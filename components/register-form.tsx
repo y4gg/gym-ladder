@@ -21,6 +21,7 @@ import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useSync } from "@/lib/useSync";
 
 export function RegisterForm({
   className,
@@ -28,6 +29,7 @@ export function RegisterForm({
 }: React.ComponentProps<"div">) {
   const { data: session } = authClient.useSession();
   const router = useRouter();
+  const { syncWorkouts } = useSync();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -57,6 +59,10 @@ export function RegisterForm({
     }
 
     toast.success("Account created");
+    toast.loading("Syncing your workouts...", { id: "sync-loading" });
+    await syncWorkouts();
+    toast.dismiss("sync-loading");
+    toast.success("Workouts synced");
     router.push("/");
   };
 
