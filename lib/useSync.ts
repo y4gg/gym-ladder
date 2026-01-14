@@ -75,7 +75,18 @@ export function useSync() {
           !serverWorkouts.find((serverWorkout) => serverWorkout.id === localWorkout.id)
       );
 
-      setWorkouts([...mergedWorkouts, ...localOnlyWorkouts]);
+      const syncedLocalWorkouts = [];
+      for (const localWorkout of localOnlyWorkouts) {
+        try {
+          const syncedWorkout = await syncWorkout(localWorkout);
+          syncedLocalWorkouts.push(syncedWorkout ?? localWorkout);
+        } catch (error) {
+          console.error(`Failed to sync workout ${localWorkout.id}:`, error);
+          syncedLocalWorkouts.push(localWorkout);
+        }
+      }
+
+      setWorkouts([...mergedWorkouts, ...syncedLocalWorkouts]);
     } catch (error) {
       console.error("Failed to sync workouts:", error);
       toast.error("Failed to sync workouts");
