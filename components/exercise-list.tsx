@@ -51,8 +51,8 @@ export function ExerciseList({ workoutId }: { workoutId: string }) {
                   Number(currentExercise.repsMin)
                   ? `-${currentExercise?.repsMax}`
                   : currentExercise?.repsMax
-                  ? `x${currentExercise?.repsMax}`
-                  : ""
+                    ? `x${currentExercise?.repsMax}`
+                    : ""
               } | Weight: ${currentExercise?.weight}kg`}
             </ItemDescription>
           </ItemContent>
@@ -114,7 +114,7 @@ export function ExerciseList({ workoutId }: { workoutId: string }) {
               <Button
                 variant={"outline"}
                 size={"sm"}
-                onClick={() => setCurrentExercise(exerciseIndex)}
+                onClick={() => setCurrentExercise(exerciseIndex + 1)}
               >
                 Skip to this exercise
               </Button>
