@@ -57,9 +57,15 @@ export function LoginForm({
 
     toast.success("Signed in");
     toast.loading("Syncing your workouts...", { id: "sync-loading" });
-    await syncWorkouts();
-    toast.dismiss("sync-loading");
-    toast.success("Workouts synced");
+    try {
+      await syncWorkouts();
+      toast.success("Workouts synced");
+    } catch (error) {
+      console.error("Sync failed:", error);
+      toast.error("Some workouts failed to sync");
+    } finally {
+      toast.dismiss("sync-loading");
+    }
     router.push("/");
   };
 
