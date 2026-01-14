@@ -8,12 +8,18 @@ import {
   removeWorkout as removeWorkoutServer,
 } from "@/server/workouts";
 import { toast } from "sonner";
+import { authClient } from "@/lib/auth-client";
 
 export function useSync() {
   const { workouts, setWorkouts, updateWorkout, removeWorkout } =
     useWorkoutStore();
 
   const syncWorkouts = useCallback(async () => {
+    const session = await authClient.getSession();
+    if (!session.data) {
+      return;
+    }
+
     try {
       const serverWorkouts = await fetchWorkouts();
 
@@ -77,6 +83,11 @@ export function useSync() {
   }, [workouts, setWorkouts]);
 
   const syncSingleWorkout = async (workout: Workout) => {
+    const session = await authClient.getSession();
+    if (!session.data) {
+      return;
+    }
+
     try {
       const syncedWorkout = await syncWorkout(workout);
       if (syncedWorkout) {
@@ -92,6 +103,12 @@ export function useSync() {
   };
 
   const syncDeleteWorkout = async (id: string) => {
+    const session = await authClient.getSession();
+    if (!session.data) {
+      removeWorkout(id);
+      return;
+    }
+
     try {
       await removeWorkoutServer(id);
       removeWorkout(id);
