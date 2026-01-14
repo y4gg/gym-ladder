@@ -13,6 +13,7 @@ import { Input } from "./ui/input";
 import { useState } from "react";
 import { Label } from "./ui/label";
 import { useWorkoutStore, NewExercise } from "@/lib/workout";
+import { useSync } from "@/lib/useSync";
 
 interface props {
   workoutId: string;
@@ -22,6 +23,7 @@ interface props {
 
 export function CreateExerciseDialog({ workoutId, open, onOpenChange }: props) {
   const { addExerciseToWorkout } = useWorkoutStore();
+  const { syncSingleWorkout } = useSync();
   const [exercise, setExercise] = useState<NewExercise>({
     name: "",
     repsMin: 8,
@@ -57,6 +59,13 @@ export function CreateExerciseDialog({ workoutId, open, onOpenChange }: props) {
       weight: exercise.weight,
       notes: exercise.notes,
     });
+
+    const workout = useWorkoutStore
+      .getState()
+      .workouts.find((w) => w.id === workoutId);
+    if (workout) {
+      syncSingleWorkout(workout);
+    }
 
     setExercise({
       name: "",

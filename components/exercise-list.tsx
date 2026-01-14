@@ -22,12 +22,14 @@ import {
 import { MoreHorizontalIcon } from "lucide-react";
 import { useState } from "react";
 import { EditExerciseDialog } from "./edit-exercise-dialog";
+import { useSync } from "@/lib/useSync";
 
 export function ExerciseList({ workoutId }: { workoutId: string }) {
   const exercises = useWorkoutStore(
     (state) => state.workouts.find((find) => find.id === workoutId)?.exercises
   );
   const { removeExerciseFromWorkout } = useWorkoutStore();
+  const { syncSingleWorkout } = useSync();
   const exercisePos = useExercisePosStore((state) => state.currentExercise);
   const setCurrentExercise = useExercisePosStore((state) => state.setCurrent);
   const currentExercise = exercises?.at(exercisePos + 1);
@@ -79,6 +81,12 @@ export function ExerciseList({ workoutId }: { workoutId: string }) {
                           workoutId,
                           currentExercise.id
                         );
+                        const workout = useWorkoutStore
+                          .getState()
+                          .workouts.find((w) => w.id === workoutId);
+                        if (workout) {
+                          syncSingleWorkout(workout);
+                        }
                       }
                     }}
                   >
@@ -136,6 +144,12 @@ export function ExerciseList({ workoutId }: { workoutId: string }) {
                       className={"text-red-400"}
                       onClick={() => {
                         removeExerciseFromWorkout(workoutId, exercise.id);
+                        const workout = useWorkoutStore
+                          .getState()
+                          .workouts.find((w) => w.id === workoutId);
+                        if (workout) {
+                          syncSingleWorkout(workout);
+                        }
                       }}
                     >
                       Delete

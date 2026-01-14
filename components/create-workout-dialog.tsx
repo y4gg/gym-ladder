@@ -13,6 +13,7 @@ import { Input } from "./ui/input";
 import { useState } from "react";
 import { useWorkoutStore } from "@/lib/workout";
 import { Label } from "./ui/label";
+import { useSync } from "@/lib/useSync";
 
 interface props {
   open: boolean;
@@ -23,12 +24,19 @@ export function CreateWorkoutDialog({ open, onOpenChange }: props) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const { addWorkout } = useWorkoutStore();
+  const { syncSingleWorkout } = useSync();
 
   const handleCreate = () => {
     addWorkout({
       name: name.trim(),
       description: description.trim(),
     });
+
+    const workouts = useWorkoutStore.getState().workouts;
+    const newWorkout = workouts[workouts.length - 1];
+    if (newWorkout) {
+      syncSingleWorkout(newWorkout);
+    }
 
     setName("");
     setDescription("");

@@ -33,6 +33,7 @@ export interface Workout extends NewWorkout {
 
 interface WorkoutStore {
   workouts: Workout[];
+  setWorkouts: (workouts: Workout[]) => void;
   addWorkout: (workout: NewWorkout) => void;
   removeWorkout: (id: string) => void;
   updateWorkout: (id: string, workout: Partial<NewWorkout>) => void;
@@ -50,6 +51,7 @@ export const useWorkoutStore = create<WorkoutStore>()(
   persist(
     (set) => ({
       workouts: [],
+      setWorkouts: (workouts) => set({ workouts }),
       addWorkout: (workout) =>
         set((state) => ({
           workouts: [...state.workouts, createWorkout(workout)],

@@ -14,11 +14,13 @@ import { EmptyWorkout } from "@/components/empty-workouts";
 import { CreateWorkoutDialog } from "./create-workout-dialog";
 import { useState } from "react";
 import Link from "next/link";
+import { useSyncOnMount, useSync } from "@/lib/useSync";
 
 export function WorkoutList() {
+  useSyncOnMount();
+  const { syncDeleteWorkout } = useSync();
   const workouts = useWorkoutStore((state) => state.workouts);
   const [open, setOpen] = useState(false);
-  const removeWorkout = useWorkoutStore((state) => state.removeWorkout);
 
   return (
     <div className="flex justify-center mt-4 md:mt-10">
@@ -52,7 +54,7 @@ export function WorkoutList() {
                     <Button>View</Button>
                   </Link>
                   <Button
-                    onClick={() => removeWorkout(workout.id)}
+                    onClick={() => syncDeleteWorkout(workout.id)}
                     size={"icon"}
                     variant={"destructive"}
                   >
