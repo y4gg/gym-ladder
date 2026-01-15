@@ -12,7 +12,7 @@ import { PencilIcon } from "lucide-react";
 import { Input } from "./ui/input";
 import { useState } from "react";
 import { Label } from "./ui/label";
-import { useWorkoutStore, type Workout, type NewWorkout } from "@/lib/workout";
+import { useWorkoutStore, type NewWorkout } from "@/lib/workout";
 import { useSync } from "@/lib/useSync";
 
 interface props {
@@ -21,11 +21,7 @@ interface props {
   onOpenChange: (open: boolean) => void;
 }
 
-export function EditWorkoutDialog({
-  workoutId,
-  open,
-  onOpenChange,
-}: props) {
+export function EditWorkoutDialog({ workoutId, open, onOpenChange }: props) {
   const { updateWorkout, workouts } = useWorkoutStore();
   const { syncSingleWorkout } = useSync();
   const workout = workouts.find((w) => w.id === workoutId);

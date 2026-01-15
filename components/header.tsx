@@ -30,7 +30,6 @@ function AccountButton() {
         variant={"destructive"}
         onClick={async () => {
           await authClient.signOut();
-          useRouter().push("/");
         }}
       >
         <LogOutIcon className="cursor-pointer" />

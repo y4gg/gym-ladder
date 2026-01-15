@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PlusIcon, Trash2Icon, MoreHorizontalIcon } from "lucide-react";
+import { PlusIcon, MoreHorizontalIcon } from "lucide-react";
 import { useWorkoutStore } from "@/lib/workout";
 import { EmptyWorkout } from "@/components/empty-workouts";
 import { CreateWorkoutDialog } from "./create-workout-dialog";
