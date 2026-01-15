@@ -136,7 +136,7 @@ export function ExerciseList({ workoutId }: { workoutId: string }) {
                   <DropdownMenuGroup>
                     <DropdownMenuLabel>Exercise Actions</DropdownMenuLabel>
                     <DropdownMenuItem
-                      onClick={() => setEditingExercisePos(exerciseIndex)}
+                      onClick={() => setEditingExercisePos(exerciseIndex + 1)}
                     >
                       Edit
                     </DropdownMenuItem>
