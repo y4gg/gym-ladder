@@ -21,7 +21,7 @@ import { usePathname, useRouter } from "next/navigation";
 function AccountButton() {
   return (
     <Link href={"/account"}>
-      <Button>Account</Button>
+      <Button variant={"outline"}>Account</Button>
     </Link>
   );
 }

@@ -22,6 +22,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useSync } from "@/lib/useSync";
+import { Loader2Icon, LogInIcon } from "lucide-react";
 
 export function RegisterForm({
   className,
@@ -33,6 +34,7 @@ export function RegisterForm({
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   if (session) {
     router.push("/");
@@ -40,36 +42,41 @@ export function RegisterForm({
   }
 
   const handleSubmit = async (event?: React.FormEvent<HTMLFormElement>) => {
-    event?.preventDefault();
-
-    if (!name || !email || !password) {
-      toast.error("Please fill in all fields");
-      return;
-    }
-
-    const { error } = await authClient.signUp.email({
-      name,
-      email,
-      password,
-    });
-
-    if (error) {
-      toast.error(error.message || "Failed to create account");
-      return;
-    }
-
-    toast.success("Account created");
-    toast.loading("Syncing your workouts...", { id: "sync-loading" });
     try {
-      await syncWorkouts();
-      toast.success("Workouts synced");
-    } catch (error) {
-      console.error("Sync failed:", error);
-      toast.error("Some workouts failed to sync");
+      setLoading(true);
+      event?.preventDefault();
+
+      if (!name || !email || !password) {
+        toast.error("Please fill in all fields");
+        return;
+      }
+
+      const { error } = await authClient.signUp.email({
+        name,
+        email,
+        password,
+      });
+
+      if (error) {
+        toast.error(error.message || "Failed to create account");
+        return;
+      }
+
+      toast.success("Account created");
+      toast.loading("Syncing your workouts...", { id: "sync-loading" });
+      try {
+        await syncWorkouts();
+        toast.success("Workouts synced");
+      } catch (error) {
+        console.error("Sync failed:", error);
+        toast.error("Some workouts failed to sync");
+      } finally {
+        toast.dismiss("sync-loading");
+      }
+      router.push("/");
     } finally {
-      toast.dismiss("sync-loading");
+      setLoading(false);
     }
-    router.push("/");
   };
 
   return (
@@ -117,7 +124,17 @@ export function RegisterForm({
                 />
               </Field>
               <Field>
-                <Button type="submit">Create account</Button>
+                <Button
+                  type="submit"
+                  disabled={!name || !email || !password || loading}
+                >
+                  {loading ? (
+                    <Loader2Icon className="animate-spin" />
+                  ) : (
+                    <LogInIcon />
+                  )}
+                  Create account
+                </Button>
                 <FieldDescription className="text-center">
                   Already have an account? <Link href="/login">Log in</Link>
                 </FieldDescription>

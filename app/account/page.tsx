@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { WrenchIcon, Trash2Icon } from "lucide-react";
+import { WrenchIcon, Trash2Icon, LogOutIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { useState } from "react";
@@ -65,7 +65,7 @@ export default function AccountPage() {
     <div className="flex justify-center w-screen">
       <Card className="small-wrapper mt-4 md:mt-10">
         <CardHeader>
-          <CardTitle>Account</CardTitle>
+          <CardTitle className="text-2xl font-semibold">Account</CardTitle>
         </CardHeader>
         <CardContent>
           {!isPending && session ? (
@@ -93,13 +93,14 @@ export default function AccountPage() {
               <Label className="mb-2 mt-5">Logout</Label>
               <Button
                 className="w-full"
-                variant="outline"
+                variant="secondary"
                 onClick={async () => {
                   await authClient.signOut();
                   router.push("/");
                   toast.success("Logged out");
                 }}
               >
+                <LogOutIcon />
                 Logout
               </Button>
               <Label className="mb-2 mt-5">Danger Zone</Label>

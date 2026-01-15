@@ -22,6 +22,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useSync } from "@/lib/useSync";
+import { LogInIcon, Loader2Icon } from "lucide-react";
 
 export function LoginForm({
   className,
@@ -32,6 +33,7 @@ export function LoginForm({
   const { syncWorkouts } = useSync();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   if (session) {
     router.push("/");
@@ -39,34 +41,39 @@ export function LoginForm({
   }
 
   const handleSubmit = async (event?: React.FormEvent<HTMLFormElement>) => {
-    event?.preventDefault();
-    if (!email || !password) {
-      toast.error("Please fill in all fields");
-      return;
-    }
-
-    const { error } = await authClient.signIn.email({
-      email,
-      password,
-    });
-
-    if (error) {
-      toast.error(error.message || "Failed to sign in");
-      return;
-    }
-
-    toast.success("Signed in");
-    toast.loading("Syncing your workouts...", { id: "sync-loading" });
     try {
-      await syncWorkouts();
-      toast.success("Workouts synced");
-    } catch (error) {
-      console.error("Sync failed:", error);
-      toast.error("Some workouts failed to sync");
+      event?.preventDefault();
+      setLoading(true);
+      if (!email || !password) {
+        toast.error("Please fill in all fields");
+        return;
+      }
+
+      const { error } = await authClient.signIn.email({
+        email,
+        password,
+      });
+
+      if (error) {
+        toast.error(error.message || "Failed to sign in");
+        return;
+      }
+
+      toast.success("Signed in");
+      toast.loading("Syncing your workouts...", { id: "sync-loading" });
+      try {
+        await syncWorkouts();
+        toast.success("Workouts synced");
+      } catch (error) {
+        console.error("Sync failed:", error);
+        toast.error("Some workouts failed to sync");
+      } finally {
+        toast.dismiss("sync-loading");
+      }
+      router.push("/");
     } finally {
-      toast.dismiss("sync-loading");
+      setLoading(false);
     }
-    router.push("/");
   };
 
   return (
@@ -111,7 +118,14 @@ export function LoginForm({
                 />
               </Field>
               <Field>
-                <Button type="submit">Login</Button>
+                <Button type="submit" disabled={!email || !password || loading}>
+                  {loading ? (
+                    <Loader2Icon className="animate-spin" />
+                  ) : (
+                    <LogInIcon />
+                  )}
+                  Login
+                </Button>
                 <FieldDescription className="text-center">
                   Don&apos;t have an account?{" "}
                   <Link href="/register">Sign up</Link>

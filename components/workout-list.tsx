@@ -49,9 +49,9 @@ export function WorkoutList() {
                       : "No description"}
                   </p>
                 </div>
-                <div className="flex min-h-full items-center">
+                <div className="flex min-h-full items-center gap-1">
                   <Link href={"/w/" + workout.id}>
-                    <Button>View</Button>
+                    <Button variant={"outline"}>View</Button>
                   </Link>
                   <Button
                     onClick={() => syncDeleteWorkout(workout.id)}

@@ -95,9 +95,10 @@ export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-          <div className={"flex w-full gap-1 mt-3"}>
+          <div className={"flex w-full gap-2 mt-3"}>
             <Input value={`Current set: ${currentSet}`} disabled />
             <Button
+              variant={"outline"}
               size={"icon"}
               onClick={() => setCurrentSet((prevSet) => prevSet + 1)}
               disabled={currentExercise?.sets == currentSet}
@@ -105,6 +106,7 @@ export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
               <PlusIcon />
             </Button>
             <Button
+              variant={"outline"}
               size={"icon"}
               onClick={() =>
                 setCurrentSet((prevSet) => Math.max(1, prevSet - 1))
