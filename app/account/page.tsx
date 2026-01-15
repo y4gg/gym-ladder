@@ -90,19 +90,6 @@ export default function AccountPage() {
                   <WrenchIcon />
                 </Button>
               </div>
-              <Label className="mb-2 mt-5">Logout</Label>
-              <Button
-                className="w-full"
-                variant="secondary"
-                onClick={async () => {
-                  await authClient.signOut();
-                  router.push("/");
-                  toast.success("Logged out");
-                }}
-              >
-                <LogOutIcon />
-                Logout
-              </Button>
               <Label className="mb-2 mt-5">Danger Zone</Label>
               <Button
                 variant={"destructive"}

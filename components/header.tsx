@@ -17,12 +17,25 @@ import { authClient } from "@/lib/auth-client";
 // import Image from "next/image";
 import { useWorkoutStore } from "@/lib/workout";
 import { usePathname, useRouter } from "next/navigation";
+import { LogOutIcon } from "lucide-react";
 
 function AccountButton() {
   return (
-    <Link href={"/account"}>
-      <Button variant={"outline"}>Account</Button>
-    </Link>
+    <>
+      <Link href={"/account"}>
+        <Button variant={"outline"}>Account</Button>
+      </Link>
+      <Button
+        size={"icon"}
+        variant={"destructive"}
+        onClick={async () => {
+          await authClient.signOut();
+          useRouter().push("/");
+        }}
+      >
+        <LogOutIcon className="cursor-pointer" />
+      </Button>
+    </>
   );
 }
 
