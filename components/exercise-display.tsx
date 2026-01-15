@@ -62,17 +62,8 @@ export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
             <Input
               className="flex-1"
               disabled
-              value={`${correctMaxReps ? "Min" : ""}Reps: ${
-                currentExercise?.repsMin
-              }`}
+              value={`Reps: ${currentExercise?.repsMin}${correctMaxReps ? `-${currentExercise?.repsMax}` : ""}`}
             />
-            {correctMaxReps ? (
-              <Input
-                className="flex-1"
-                disabled
-                value={`MaxReps: ${currentExercise?.repsMax}`}
-              />
-            ) : null}
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <Button variant={"outline"} size={"icon"}>

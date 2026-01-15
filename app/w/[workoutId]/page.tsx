@@ -42,7 +42,7 @@ export default function WorkoutViewer({
         <div className="col-span-3">
           <ExerciseDisplay workoutId={workoutId} />
         </div>
-        <div className="col-span-4">
+        <div className="col-span-4 mt-3">
           <div className="flex justify-between mb-2">
             <h1 className="font-semibold text-2xl">Next up:</h1>
             <Button onClick={() => setOpen(true)}>Create Exercise</Button>
