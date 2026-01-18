@@ -14,6 +14,8 @@ import { useState } from "react";
 import { Label } from "./ui/label";
 import { useWorkoutStore, NewExercise } from "@/lib/workout";
 import { useSync } from "@/lib/useSync";
+import { recordInitialExerciseHistory } from "@/server/workouts";
+import { toast } from "sonner";
 
 interface props {
   workoutId: string;
@@ -50,7 +52,7 @@ export function CreateExerciseDialog({ workoutId, open, onOpenChange }: props) {
     });
   };
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     addExerciseToWorkout(workoutId, {
       name: exercise.name.trim(),
       repsMin: exercise.repsMin,
@@ -65,6 +67,22 @@ export function CreateExerciseDialog({ workoutId, open, onOpenChange }: props) {
       .workouts.find((w) => w.id === workoutId);
     if (workout) {
       syncSingleWorkout(workout);
+
+      try {
+        await recordInitialExerciseHistory({
+          name: exercise.name.trim(),
+          weight: exercise.weight,
+          sets: exercise.sets,
+          repsMin: exercise.repsMin,
+          repsMax: exercise.repsMax,
+          workoutId: workoutId,
+        });
+      } catch (error) {
+        console.error("Failed to record exercise history:", error);
+        toast.error("Failed to record exercise history", {
+          description: "Exercise was created but history recording failed",
+        });
+      }
     }
 
     setExercise({

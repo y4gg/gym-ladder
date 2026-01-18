@@ -135,10 +135,15 @@ export default function ExerciseHistoryPage({
                     <Line
                       dataKey="weight"
                       type="monotone"
-                      stroke="var(--color-weight)"
+                      fill="#ffffff"
                       strokeWidth={2}
-                      dot={{ fill: "var(--color-weight)", r: 4 }}
-                      activeDot={{ r: 6 }}
+                      dot={{
+                        fill: "#ffffff",
+                        r: 5,
+                        strokeWidth: 2,
+                        stroke: "hsl(var(--background))",
+                      }}
+                      activeDot={{ r: 7 }}
                     />
                     <ChartTooltip content={<ChartTooltipContent />} />
                   </LineChart>
