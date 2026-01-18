@@ -11,5 +11,13 @@ export const auth = betterAuth({
     enabled: true,
   },
   user: { deleteUser: { enabled: true } },
-  plugins: [passkey()],
+  plugins: [
+    passkey({
+      rpID: process.env.NODE_ENV === "production" 
+        ? new URL(process.env.BETTER_AUTH_URL!).hostname 
+        : "localhost",
+      rpName: "Gym Tracker",
+      origin: process.env.BETTER_AUTH_URL,
+    }),
+  ],
 });

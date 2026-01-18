@@ -97,6 +97,7 @@ export function LoginForm({
                   type="email"
                   placeholder="m@example.com"
                   required
+                  autoComplete="username webauthn"
                 />
               </Field>
               <Field>
@@ -115,6 +116,7 @@ export function LoginForm({
                   id="password"
                   type="password"
                   required
+                  autoComplete="current-password webauthn"
                 />
               </Field>
               <Field>
