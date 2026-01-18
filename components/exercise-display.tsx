@@ -9,9 +9,10 @@ import {
 } from "@/components/ui/card";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { PlusIcon, MinusIcon, MoreHorizontalIcon } from "lucide-react";
+import { PlusIcon, MinusIcon, MoreHorizontalIcon, HistoryIcon } from "lucide-react";
 import { Suspense, useState } from "react";
 import { Textarea } from "./ui/textarea";
+import { useRouter } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,6 +24,7 @@ import {
 import { EditExerciseDialog } from "./edit-exercise-dialog";
 
 export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
+  const router = useRouter();
   const [currentSet, setCurrentSet] = useState(1);
   const exercises = useWorkoutStore(
     (state) => state.workouts.find((find) => find.id === workoutId)?.exercises
@@ -78,6 +80,16 @@ export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
                   >
                     Edit
                   </DropdownMenuItem>
+                  {currentExercise && (
+                    <DropdownMenuItem
+                      onClick={() => {
+                        router.push(`/w/${workoutId}/h/${currentExercise.id}`);
+                      }}
+                    >
+                      <HistoryIcon className="mr-2 h-4 w-4" />
+                      View History
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuItem
                     className={"text-red-400"}
                     onClick={() => {

@@ -19,12 +19,14 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontalIcon } from "lucide-react";
+import { MoreHorizontalIcon, HistoryIcon } from "lucide-react";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { EditExerciseDialog } from "./edit-exercise-dialog";
 import { useSync } from "@/lib/useSync";
 
 export function ExerciseList({ workoutId }: { workoutId: string }) {
+  const router = useRouter();
   const exercises = useWorkoutStore(
     (state) => state.workouts.find((find) => find.id === workoutId)?.exercises
   );
@@ -73,6 +75,16 @@ export function ExerciseList({ workoutId }: { workoutId: string }) {
                   >
                     Edit
                   </DropdownMenuItem>
+                  {currentExercise && (
+                    <DropdownMenuItem
+                      onClick={() => {
+                        router.push(`/w/${workoutId}/h/${currentExercise.id}`);
+                      }}
+                    >
+                      <HistoryIcon className="mr-2 h-4 w-4" />
+                      View History
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuItem
                     className={"text-red-400"}
                     onClick={() => {
@@ -139,6 +151,14 @@ export function ExerciseList({ workoutId }: { workoutId: string }) {
                       onClick={() => setEditingExercisePos(exerciseIndex + 1)}
                     >
                       Edit
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        router.push(`/w/${workoutId}/h/${exercise.id}`);
+                      }}
+                    >
+                      <HistoryIcon className="mr-2 h-4 w-4" />
+                      View History
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       className={"text-red-400"}

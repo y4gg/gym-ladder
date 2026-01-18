@@ -8,8 +8,11 @@ import {
   createWorkout,
   updateWorkout,
   deleteWorkout,
+  getExerciseHistoryByName,
+  addExerciseHistoryEntry,
 } from "@/db/queries";
 import type { Exercise } from "@/lib/workout";
+import { createId } from "@paralleldrive/cuid2";
 
 export async function fetchWorkouts() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -57,20 +60,24 @@ export async function syncWorkout(workoutData: {
       return existingWorkout;
     }
 
-    return updateWorkout(workoutData.id, session.user.id, {
+    const updatedWorkout = await updateWorkout(workoutData.id, session.user.id, {
       name: workoutData.name,
       description: workoutData.description,
       exercises: workoutData.exercises,
     });
+
+    return updatedWorkout;
   }
 
-  return createWorkout({
+  const newWorkout = await createWorkout({
     id: workoutData.id,
     name: workoutData.name,
     description: workoutData.description,
     exercises: workoutData.exercises,
     userId: session.user.id,
   });
+
+  return newWorkout;
 }
 
 export async function removeWorkout(id: string) {
@@ -81,4 +88,67 @@ export async function removeWorkout(id: string) {
   }
 
   return deleteWorkout(id, session.user.id);
+}
+
+export async function fetchExerciseHistory(exerciseName: string) {
+  const session = await auth.api.getSession({ headers: await headers() });
+
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+
+  return getExerciseHistoryByName(exerciseName, session.user.id);
+}
+
+export async function recordInitialExerciseHistory(exercise: {
+  name: string;
+  weight: number;
+  sets: number;
+  repsMin: number;
+  repsMax: number | null;
+  workoutId: string;
+}) {
+  const session = await auth.api.getSession({ headers: await headers() });
+
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+
+  return addExerciseHistoryEntry({
+    id: createId(),
+    exerciseName: exercise.name,
+    weight: exercise.weight,
+    sets: exercise.sets,
+    repsMin: exercise.repsMin,
+    repsMax: exercise.repsMax,
+    userId: session.user.id,
+    workoutId: exercise.workoutId,
+  });
+}
+
+export async function recordWeightUpdateHistory(exercise: {
+  id: string;
+  name: string;
+  weight: number;
+  sets: number;
+  repsMin: number;
+  repsMax: number | null;
+  workoutId: string;
+}) {
+  const session = await auth.api.getSession({ headers: await headers() });
+
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+
+  return addExerciseHistoryEntry({
+    id: createId(),
+    exerciseName: exercise.name,
+    weight: exercise.weight,
+    sets: exercise.sets,
+    repsMin: exercise.repsMin,
+    repsMax: exercise.repsMax,
+    userId: session.user.id,
+    workoutId: exercise.workoutId,
+  });
 }

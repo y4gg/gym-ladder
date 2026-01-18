@@ -1,6 +1,6 @@
 import { db } from "@/db";
-import { workout } from "@/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { workout, exerciseHistory } from "@/db/schema";
+import { eq, desc, and } from "drizzle-orm";
 import type { Exercise } from "@/lib/workout";
 
 export async function getWorkoutsByUserId(userId: string) {
@@ -72,4 +72,39 @@ export async function deleteWorkout(id: string, userId: string) {
   }
 
   return deletedWorkout;
+}
+
+export async function getExerciseHistoryByName(
+  exerciseName: string,
+  userId: string
+) {
+  const history = await db
+    .select()
+    .from(exerciseHistory)
+    .where(
+      and(
+        eq(exerciseHistory.exerciseName, exerciseName),
+        eq(exerciseHistory.userId, userId)
+      )
+    )
+    .orderBy(desc(exerciseHistory.createdAt));
+
+  return history;
+}
+
+export async function addExerciseHistoryEntry(historyData: {
+  id: string;
+  exerciseName: string;
+  weight: number;
+  sets: number;
+  repsMin: number;
+  repsMax: number | null;
+  userId: string;
+  workoutId: string;
+}) {
+  const [newHistory] = await db
+    .insert(exerciseHistory)
+    .values(historyData)
+    .returning();
+  return newHistory;
 }
