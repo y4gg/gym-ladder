@@ -3,17 +3,43 @@
 import { useWorkoutStore } from "@/lib/workout";
 import { useSyncOnMount } from "@/lib/useSync";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ActivityIcon, PlusIcon } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ActivityIcon, PlusIcon, MoreHorizontalIcon } from "lucide-react";
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+} from "@/components/ui/item";
 
 export default function Page() {
   useSyncOnMount();
   const workouts = useWorkoutStore((state) => state.workouts);
+  const addWorkout = useWorkoutStore((state) => state.addWorkout);
+  const router = useRouter();
+
+  const handleCreateWorkout = () => {
+    const newWorkout = addWorkout({ name: "New Workout", description: null });
+    const updatedWorkouts = useWorkoutStore.getState().workouts;
+    const latestWorkout = updatedWorkouts[updatedWorkouts.length - 1];
+    router.push(`/w/${latestWorkout.id}`);
+  };
 
   return (
-    <div className="flex flex-col gap-4">
-      <Card>
+    <div className="flex flex-col items-center mt-4 md:mt-10">
+      <Card className="wrapper">
         <CardHeader>
           <CardTitle className="text-2xl">Welcome to Gym Ladder</CardTitle>
           <CardDescription>
@@ -28,7 +54,7 @@ export default function Page() {
               <p className="text-muted-foreground text-center mb-4">
                 Create your first workout to get started tracking your exercises
               </p>
-              <Button>
+              <Button onClick={handleCreateWorkout}>
                 <PlusIcon />
                 Create Workout
               </Button>
@@ -65,10 +91,11 @@ export default function Page() {
                   </CardContent>
                 </Card>
               </div>
+              <Separator />
               <div>
                 <h3 className="text-lg font-semibold mb-2">Quick Actions</h3>
                 <div className="flex gap-2">
-                  <Button>
+                  <Button onClick={handleCreateWorkout}>
                     <PlusIcon />
                     Create Workout
                   </Button>
@@ -80,6 +107,41 @@ export default function Page() {
                     </Link>
                   )}
                 </div>
+              </div>
+              <Separator />
+              <div>
+                <h3 className="text-lg font-semibold mb-4">Your Workouts</h3>
+                {workouts.map((workout) => (
+                  <Item key={workout.id} variant="outline" className="mb-2">
+                    <ItemContent>
+                      <ItemTitle className="text-xl">{workout.name}</ItemTitle>
+                      <ItemDescription>
+                        {workout.exercises.length} exercise{workout.exercises.length !== 1 ? 's' : ''}{workout.description ? ` | ${workout.description}` : ''}
+                      </ItemDescription>
+                    </ItemContent>
+                    <ItemActions>
+                      <Link href={`/w/${workout.id}`}>
+                        <Button variant="outline" size="sm">
+                          View
+                        </Button>
+                      </Link>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger>
+                          <Button variant="outline" size="icon-sm">
+                            <MoreHorizontalIcon />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuGroup>
+                            <DropdownMenuLabel>Workout Actions</DropdownMenuLabel>
+                            <DropdownMenuItem>Edit</DropdownMenuItem>
+                            <DropdownMenuItem className="text-red-400">Delete</DropdownMenuItem>
+                          </DropdownMenuGroup>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </ItemActions>
+                  </Item>
+                ))}
               </div>
             </div>
           )}

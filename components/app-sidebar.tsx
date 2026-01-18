@@ -13,7 +13,7 @@ import {
   SidebarMenuItem,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
-import { PlusIcon, Home, LayoutDashboard, User, SearchIcon, LogOutIcon } from "lucide-react";
+import { PlusIcon, LayoutDashboard, User, SearchIcon, LogOutIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useWorkoutStore } from "@/lib/workout";
@@ -78,26 +78,7 @@ export function AppSidebar() {
               </div>
             </SidebarGroupContent>
           </SidebarGroup>
-
-          <SidebarGroup>
-            <SidebarGroupLabel>Navigation</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton 
-                    render={<Link href="/" />}
-                    isActive={pathname === "/"}
-                  >
-                    <Home />
-                    <span>Home</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-
           <SidebarSeparator />
-
           <SidebarGroup>
             <SidebarGroupLabel>Workouts</SidebarGroupLabel>
             <SidebarGroupContent>
@@ -118,11 +99,6 @@ export function AppSidebar() {
                       >
                         <div className="flex flex-col items-start">
                           <span>{workout.name}</span>
-                          {workout.description && (
-                            <span className="text-xs text-muted-foreground truncate">
-                              {workout.description}
-                            </span>
-                          )}
                         </div>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
