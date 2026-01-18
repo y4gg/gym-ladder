@@ -119,7 +119,7 @@ export default function ExerciseHistoryPage({
               <CardHeader>
                 <CardTitle>Weight Progression</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pl-1">
                 <ChartContainer
                   config={chartConfig}
                   className="min-h-[300px] w-full"
@@ -131,11 +131,16 @@ export default function ExerciseHistoryPage({
                       tickMargin={10}
                       axisLine={false}
                     />
-                    <YAxis tickLine={false} axisLine={false} />
+                    <YAxis 
+                      tickLine={false} 
+                      axisLine={false} 
+                      width={40}
+                      domain={["dataMin - 5", "auto"]} 
+                    />
                     <Line
                       dataKey="weight"
                       type="monotone"
-                      fill="#ffffff"
+                      stroke="#ffffff"
                       strokeWidth={2}
                       dot={{
                         fill: "#ffffff",
