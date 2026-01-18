@@ -99,16 +99,7 @@ export function AppSidebar() {
           <SidebarSeparator />
 
           <SidebarGroup>
-            <SidebarGroupLabel className="flex items-center justify-between pr-0">
-              Workouts
-              <SidebarMenuButton 
-                size="sm" 
-                onClick={() => setOpen(true)}
-              >
-                <PlusIcon />
-                <span className="hidden sm:inline">New</span>
-              </SidebarMenuButton>
-            </SidebarGroupLabel>
+            <SidebarGroupLabel>Workouts</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {filteredWorkouts.length === 0 ? (
@@ -137,6 +128,15 @@ export function AppSidebar() {
                     </SidebarMenuItem>
                   ))
                 )}
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    variant="default"
+                    onClick={() => setOpen(true)}
+                  >
+                    <PlusIcon />
+                    <span>New Workout</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
