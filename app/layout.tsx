@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import { Header } from "@/components/header";
+import { SidebarLayout } from "@/components/sidebar-layout";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -38,10 +38,9 @@ export default function RootLayout({
           // enableSystem
           // disableTransitionOnChange
         >
-          <div className="absolute-top-0 w-full">
-            <Header />
-          </div>
-          {children}
+          <SidebarLayout>
+            {children}
+          </SidebarLayout>
           <Toaster />
         </ThemeProvider>
       </body>
