@@ -5,15 +5,10 @@ import { use } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeftIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Line, LineChart, XAxis, YAxis } from "recharts";
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  type ChartConfig,
-} from "@/components/ui/chart";
-import { ExerciseHistoryList } from "@/components/exercise-history-list";
+import { WeightProgressionChart } from "@/components/weight-progression-chart";
+import { HistoryLoadingState } from "@/components/history-loading-state";
+import { HistoryEmptyState } from "@/components/history-empty-state";
+import { HistoryLogCard } from "@/components/history-log-card";
 import { fetchExerciseHistory } from "@/server/workouts";
 import { useWorkoutStore } from "@/lib/workout";
 
@@ -25,6 +20,12 @@ interface HistoryEntry {
   repsMin: number;
   repsMax: number | null;
   createdAt: Date;
+}
+
+interface ChartData {
+  index: number;
+  weight: number;
+  date: string;
 }
 
 export default function ExerciseHistoryPage({
@@ -62,7 +63,7 @@ export default function ExerciseHistoryPage({
     loadHistory();
   }, [exerciseId, exercise]);
 
-  const chartData = history
+  const chartData: ChartData[] = history
     .slice()
     .reverse()
     .map((entry, index) => ({
@@ -70,13 +71,6 @@ export default function ExerciseHistoryPage({
       weight: entry.weight,
       date: new Date(entry.createdAt).toLocaleDateString(),
     }));
-
-  const chartConfig = {
-    weight: {
-      label: "Weight (kg)",
-      color: "hsl(var(--chart-1))",
-    },
-  } satisfies ChartConfig;
 
   return (
     <div className="min-h-screen bg-background">
@@ -97,73 +91,13 @@ export default function ExerciseHistoryPage({
         </div>
 
         {loading ? (
-          <Card>
-            <CardContent className="flex items-center justify-center py-12">
-              <p>Loading history...</p>
-            </CardContent>
-          </Card>
+          <HistoryLoadingState />
         ) : history.length === 0 ? (
-          <Card>
-            <CardContent className="flex flex-col items-center justify-center py-12">
-              <p className="text-lg text-muted-foreground">
-                No history recorded yet
-              </p>
-              <p className="text-sm text-muted-foreground">
-                Complete workouts to start tracking your progress
-              </p>
-            </CardContent>
-          </Card>
+          <HistoryEmptyState />
         ) : (
           <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Weight Progression</CardTitle>
-              </CardHeader>
-              <CardContent className="pl-1">
-                <ChartContainer
-                  config={chartConfig}
-                  className="min-h-[300px] w-full"
-                >
-                  <LineChart data={chartData}>
-                    <XAxis
-                      dataKey="date"
-                      tickLine={false}
-                      tickMargin={10}
-                      axisLine={false}
-                    />
-                    <YAxis 
-                      tickLine={false} 
-                      axisLine={false} 
-                      width={40}
-                      domain={["dataMin - 5", "auto"]} 
-                    />
-                    <Line
-                      dataKey="weight"
-                      type="monotone"
-                      stroke="#ffffff"
-                      strokeWidth={2}
-                      dot={{
-                        fill: "#ffffff",
-                        r: 5,
-                        strokeWidth: 2,
-                        stroke: "hsl(var(--background))",
-                      }}
-                      activeDot={{ r: 7 }}
-                    />
-                    <ChartTooltip content={<ChartTooltipContent />} />
-                  </LineChart>
-                </ChartContainer>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>History Log</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ExerciseHistoryList history={history} />
-              </CardContent>
-            </Card>
+            <WeightProgressionChart data={chartData} />
+            <HistoryLogCard history={history} />
           </div>
         )}
       </div>

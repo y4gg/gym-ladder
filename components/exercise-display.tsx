@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { PlusIcon, MinusIcon, MoreHorizontalIcon, HistoryIcon } from "lucide-react";
+import { PlusIcon, MinusIcon, MoreHorizontalIcon } from "lucide-react";
 import { Suspense, useState } from "react";
 import { Textarea } from "./ui/textarea";
 import { useRouter } from "next/navigation";
@@ -86,7 +86,6 @@ export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
                         router.push(`/w/${workoutId}/h/${currentExercise.id}`);
                       }}
                     >
-                      <HistoryIcon className="mr-2 h-4 w-4" />
                       View History
                     </DropdownMenuItem>
                   )}
