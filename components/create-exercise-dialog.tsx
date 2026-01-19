@@ -16,6 +16,7 @@ import { useWorkoutStore, NewExercise } from "@/lib/workout";
 import { useSync } from "@/lib/useSync";
 import { recordInitialExerciseHistory } from "@/server/workouts";
 import { toast } from "sonner";
+import { authClient } from "@/lib/auth-client";
 
 interface props {
   workoutId: string;
@@ -67,6 +68,11 @@ export function CreateExerciseDialog({ workoutId, open, onOpenChange }: props) {
       .workouts.find((w) => w.id === workoutId);
     if (workout) {
       syncSingleWorkout(workout);
+
+      const session = await authClient.getSession();
+      if (!session.data) {
+        return;
+      }
 
       try {
         await recordInitialExerciseHistory({

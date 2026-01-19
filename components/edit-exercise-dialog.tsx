@@ -17,6 +17,7 @@ import { useSync } from "@/lib/useSync";
 import { recordWeightUpdateHistory } from "@/server/workouts";
 import { toast } from "sonner";
 import { useEffect, useRef } from "react";
+import { authClient } from "@/lib/auth-client";
 
 interface props {
   workoutId: string;
@@ -105,6 +106,11 @@ export function EditExerciseDialog({
         syncSingleWorkout(workout);
 
         if (weightChanged) {
+          const session = await authClient.getSession();
+          if (!session.data) {
+            return;
+          }
+
           try {
             await recordWeightUpdateHistory({
               id: exercise.id,
