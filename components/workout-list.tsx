@@ -13,6 +13,7 @@ import { useWorkoutStore } from "@/lib/workout";
 import { EmptyWorkout } from "@/components/empty-workouts";
 import { CreateWorkoutDialog } from "./create-workout-dialog";
 import { EditWorkoutDialog } from "./edit-workout-dialog";
+import { DeleteWorkoutDialog } from "./delete-workout-dialog";
 import { useState } from "react";
 import {
   DropdownMenu,
@@ -31,6 +32,7 @@ export function WorkoutList() {
   const workouts = useWorkoutStore((state) => state.workouts);
   const [open, setOpen] = useState(false);
   const [editingWorkoutId, setEditingWorkoutId] = useState<string | null>(null);
+  const [deletingWorkoutId, setDeletingWorkoutId] = useState<string | null>(null);
 
   return (
     <div className="flex justify-center mt-4 md:mt-10">
@@ -81,7 +83,7 @@ export function WorkoutList() {
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           className={"text-red-400"}
-                          onClick={() => syncDeleteWorkout(workout.id)}
+                          onClick={() => setDeletingWorkoutId(workout.id)}
                         >
                           Delete
                         </DropdownMenuItem>
@@ -106,6 +108,18 @@ export function WorkoutList() {
               setEditingWorkoutId(null);
             }
           }}
+        />
+      )}
+      {deletingWorkoutId && (
+        <DeleteWorkoutDialog
+          workoutId={deletingWorkoutId}
+          open={deletingWorkoutId !== null}
+          onOpenChange={(open) => {
+            if (!open) {
+              setDeletingWorkoutId(null);
+            }
+          }}
+          onDeleteWorkout={syncDeleteWorkout}
         />
       )}
     </div>

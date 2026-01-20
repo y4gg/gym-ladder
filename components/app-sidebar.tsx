@@ -31,7 +31,7 @@ export function AppSidebar() {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const { data: session } = authClient.useSession();
-  
+
   useSyncOnMount();
 
   const filteredWorkouts = workouts.filter((workout) =>
@@ -47,8 +47,8 @@ export function AppSidebar() {
         <SidebarHeader>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton 
-                size="lg" 
+              <SidebarMenuButton
+                size="lg"
                 render={<Link href="/" />}
                 isActive={pathname === "/"}
               >
@@ -87,7 +87,7 @@ export function AppSidebar() {
                   <SidebarMenuItem>
                     <div className="flex flex-col gap-2 p-2 text-sm text-muted-foreground">
                       <p>{searchQuery ? "No workouts found" : "No workouts yet"}</p>
-                      <p className="text-xs">{searchQuery ? "Try a different search term" : "Create your first workout"}</p>
+                      {searchQuery ? <p className="text-xs">Try a diffrent search term</p> : ""}
                     </div>
                   </SidebarMenuItem>
                 ) : (
@@ -127,7 +127,7 @@ export function AppSidebar() {
                     <ModeToggle />
                     {session ? (
                       <>
-                        <SidebarMenuButton 
+                        <SidebarMenuButton
                           render={<Link href="/account" />}
                           isActive={pathname === "/account"}
                           className="flex-1"
@@ -146,7 +146,7 @@ export function AppSidebar() {
                         </Button>
                       </>
                     ) : (
-                      <SidebarMenuButton 
+                      <SidebarMenuButton
                         render={<Link href="/login" />}
                         className="flex-1"
                       >
@@ -160,7 +160,7 @@ export function AppSidebar() {
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarFooter>
-      </Sidebar>
+      </Sidebar >
       <CreateWorkoutDialog open={open} onOpenChange={setOpen} />
     </>
   );

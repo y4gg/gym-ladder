@@ -8,20 +8,19 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Separator } from "@/components/ui/separator";
 import { ActivityIcon, PlusIcon } from "lucide-react";
 import { StatsCards } from "@/components/stats-cards";
-import { QuickActions } from "@/components/quick-actions";
 import { WorkoutsList } from "@/components/workouts-list";
+import { CreateWorkoutDialog } from "@/components/create-workout-dialog";
+import { useState } from "react";
 
 export default function Page() {
   useSyncOnMount();
   const workouts = useWorkoutStore((state) => state.workouts);
   const addWorkout = useWorkoutStore((state) => state.addWorkout);
   const router = useRouter();
+  const [createDialogOpen, setCreateDialogOpen] = useState(false);
 
   const handleCreateWorkout = () => {
-    const newWorkout = addWorkout({ name: "New Workout", description: null });
-    const updatedWorkouts = useWorkoutStore.getState().workouts;
-    const latestWorkout = updatedWorkouts[updatedWorkouts.length - 1];
-    router.push(`/w/${latestWorkout.id}`);
+    setCreateDialogOpen(true);
   };
 
   return (
@@ -50,13 +49,12 @@ export default function Page() {
             <div className="flex flex-col gap-4">
               <StatsCards workouts={workouts} />
               <Separator />
-              <QuickActions onCreateWorkout={handleCreateWorkout} workouts={workouts} />
-              <Separator />
-              <WorkoutsList workouts={workouts} />
+              <WorkoutsList workouts={workouts} onCreateWorkout={handleCreateWorkout} />
             </div>
           )}
         </CardContent>
       </Card>
+      <CreateWorkoutDialog open={createDialogOpen} onOpenChange={setCreateDialogOpen} />
     </div>
   );
 }

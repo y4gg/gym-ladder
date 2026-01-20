@@ -22,6 +22,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { EditExerciseDialog } from "./edit-exercise-dialog";
+import { DeleteExerciseDialog } from "./delete-exercise-dialog";
+import { useSync } from "@/lib/useSync";
 
 export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
   const router = useRouter();
@@ -40,11 +42,18 @@ export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
     currentExercise?.repsMax > currentExercise?.repsMin
       ? true
       : false;
-  const { updateExerciseInWorkout, removeExerciseFromWorkout } =
-    useWorkoutStore();
+  const { updateExerciseInWorkout } = useWorkoutStore();
+  const { syncDeleteExercise } = useSync();
   const [editingExercisePos, setEditingExercisePos] = useState<number | null>(
     null
   );
+  const [deletingExerciseId, setDeletingExerciseId] = useState<string | null>(
+    null
+  );
+
+  const handleDeleteExercise = (workoutId: string, exerciseId: string) => {
+    syncDeleteExercise(workoutId, exerciseId);
+  };
 
   return (
     <Suspense>
@@ -93,10 +102,7 @@ export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
                     className={"text-red-400"}
                     onClick={() => {
                       if (currentExercise) {
-                        removeExerciseFromWorkout(
-                          workoutId,
-                          currentExercise.id
-                        );
+                        setDeletingExerciseId(currentExercise.id);
                       }
                     }}
                   >
@@ -172,6 +178,19 @@ export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
               setEditingExercisePos(null);
             }
           }}
+        />
+      )}
+      {deletingExerciseId && (
+        <DeleteExerciseDialog
+          workoutId={workoutId}
+          exerciseId={deletingExerciseId}
+          open={deletingExerciseId !== null}
+          onOpenChange={(open) => {
+            if (!open) {
+              setDeletingExerciseId(null);
+            }
+          }}
+          onDeleteExercise={handleDeleteExercise}
         />
       )}
     </Suspense>

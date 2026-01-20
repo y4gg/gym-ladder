@@ -20,7 +20,7 @@ export function QuickActions({ onCreateWorkout, workouts }: QuickActionsProps) {
         </Button>
         {workouts.length > 0 && (
           <Link href={`/w/${workouts[0].id}`}>
-            <Button variant="outline">View Latest Workout</Button>
+            <Button variant="outline">Last workout</Button>
           </Link>
         )}
       </div>

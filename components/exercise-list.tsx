@@ -23,6 +23,7 @@ import { MoreHorizontalIcon, HistoryIcon } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { EditExerciseDialog } from "./edit-exercise-dialog";
+import { DeleteExerciseDialog } from "./delete-exercise-dialog";
 import { useSync } from "@/lib/useSync";
 
 export function ExerciseList({ workoutId }: { workoutId: string }) {
@@ -30,8 +31,8 @@ export function ExerciseList({ workoutId }: { workoutId: string }) {
   const exercises = useWorkoutStore(
     (state) => state.workouts.find((find) => find.id === workoutId)?.exercises
   );
-  const { removeExerciseFromWorkout } = useWorkoutStore();
-  const { syncSingleWorkout } = useSync();
+  const {} = useWorkoutStore();
+  const { syncDeleteExercise } = useSync();
   const exercisePos = useExercisePosStore((state) => state.currentExercise);
   const setCurrentExercise = useExercisePosStore((state) => state.setCurrent);
   const currentExercise = exercises?.at(exercisePos + 1);
@@ -39,6 +40,13 @@ export function ExerciseList({ workoutId }: { workoutId: string }) {
   const [editingExercisePos, setEditingExercisePos] = useState<number | null>(
     null
   );
+  const [deletingExerciseId, setDeletingExerciseId] = useState<string | null>(
+    null
+  );
+
+  const handleDeleteExercise = (workoutId: string, exerciseId: string) => {
+    syncDeleteExercise(workoutId, exerciseId);
+  };
 
   return (
     <div>
@@ -71,7 +79,7 @@ export function ExerciseList({ workoutId }: { workoutId: string }) {
                 <DropdownMenuGroup>
                   <DropdownMenuLabel>Exercise Actions</DropdownMenuLabel>
                   <DropdownMenuItem
-                    onClick={() => setEditingExercisePos(exercisePos)}
+                    onClick={() => setEditingExercisePos(exercisePos + 1)}
                   >
                     Edit
                   </DropdownMenuItem>
@@ -81,7 +89,6 @@ export function ExerciseList({ workoutId }: { workoutId: string }) {
                         router.push(`/w/${workoutId}/h/${currentExercise.id}`);
                       }}
                     >
-                      <HistoryIcon className="mr-2 h-4 w-4" />
                       View History
                     </DropdownMenuItem>
                   )}
@@ -89,16 +96,7 @@ export function ExerciseList({ workoutId }: { workoutId: string }) {
                     className={"text-red-400"}
                     onClick={() => {
                       if (currentExercise) {
-                        removeExerciseFromWorkout(
-                          workoutId,
-                          currentExercise.id
-                        );
-                        const workout = useWorkoutStore
-                          .getState()
-                          .workouts.find((w) => w.id === workoutId);
-                        if (workout) {
-                          syncSingleWorkout(workout);
-                        }
+                        setDeletingExerciseId(currentExercise.id);
                       }
                     }}
                   >
@@ -157,20 +155,11 @@ export function ExerciseList({ workoutId }: { workoutId: string }) {
                         router.push(`/w/${workoutId}/h/${exercise.id}`);
                       }}
                     >
-                      <HistoryIcon className="mr-2 h-4 w-4" />
                       View History
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       className={"text-red-400"}
-                      onClick={() => {
-                        removeExerciseFromWorkout(workoutId, exercise.id);
-                        const workout = useWorkoutStore
-                          .getState()
-                          .workouts.find((w) => w.id === workoutId);
-                        if (workout) {
-                          syncSingleWorkout(workout);
-                        }
-                      }}
+                      onClick={() => setDeletingExerciseId(exercise.id)}
                     >
                       Delete
                     </DropdownMenuItem>
@@ -192,6 +181,19 @@ export function ExerciseList({ workoutId }: { workoutId: string }) {
               setEditingExercisePos(null);
             }
           }}
+        />
+      )}
+      {deletingExerciseId && (
+        <DeleteExerciseDialog
+          workoutId={workoutId}
+          exerciseId={deletingExerciseId}
+          open={deletingExerciseId !== null}
+          onOpenChange={(open) => {
+            if (!open) {
+              setDeletingExerciseId(null);
+            }
+          }}
+          onDeleteExercise={handleDeleteExercise}
         />
       )}
     </div>
