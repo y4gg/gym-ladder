@@ -77,6 +77,25 @@ export async function syncWorkout(workoutData: {
     userId: session.user.id,
   });
 
+  for (const exercise of workoutData.exercises) {
+    const existingHistory = await getExerciseHistoryByName(
+      exercise.name,
+      session.user.id
+    );
+    if (existingHistory.length === 0) {
+      await addExerciseHistoryEntry({
+        id: createId(),
+        exerciseName: exercise.name,
+        weight: exercise.weight,
+        sets: exercise.sets,
+        repsMin: exercise.repsMin,
+        repsMax: exercise.repsMax,
+        userId: session.user.id,
+        workoutId: newWorkout.id,
+      });
+    }
+  }
+
   return newWorkout;
 }
 
