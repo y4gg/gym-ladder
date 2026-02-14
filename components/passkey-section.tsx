@@ -46,7 +46,7 @@ export function PasskeySection({
     <>
       <Card className="small-wrapper">
         <CardHeader>
-          <CardTitle>Add Passkey</CardTitle>
+          <CardTitle className="text-xl">Passkeys</CardTitle>
         </CardHeader>
         <CardContent>
           <Button onClick={onAddPasskey} disabled={addPasskeyLoading} className="w-full">
