@@ -14,6 +14,9 @@ import { useState } from "react";
 import { Label } from "./ui/label";
 import { useWorkoutStore, NewExercise } from "@/lib/workout";
 import { useSync } from "@/lib/useSync";
+import { recordInitialExerciseHistory } from "@/server/workouts";
+import { toast } from "sonner";
+import { authClient } from "@/lib/auth-client";
 
 interface props {
   workoutId: string;
@@ -50,7 +53,7 @@ export function CreateExerciseDialog({ workoutId, open, onOpenChange }: props) {
     });
   };
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     addExerciseToWorkout(workoutId, {
       name: exercise.name.trim(),
       repsMin: exercise.repsMin,
@@ -59,13 +62,6 @@ export function CreateExerciseDialog({ workoutId, open, onOpenChange }: props) {
       weight: exercise.weight,
       notes: exercise.notes,
     });
-
-    const workout = useWorkoutStore
-      .getState()
-      .workouts.find((w) => w.id === workoutId);
-    if (workout) {
-      syncSingleWorkout(workout);
-    }
 
     setExercise({
       name: "",
@@ -76,6 +72,34 @@ export function CreateExerciseDialog({ workoutId, open, onOpenChange }: props) {
       notes: "",
     });
     onOpenChange(false);
+
+    const workout = useWorkoutStore
+      .getState()
+      .workouts.find((w) => w.id === workoutId);
+    if (workout) {
+      syncSingleWorkout(workout);
+
+      const session = await authClient.getSession();
+      if (!session.data) {
+        return;
+      }
+
+      try {
+        await recordInitialExerciseHistory({
+          name: exercise.name.trim(),
+          weight: exercise.weight,
+          sets: exercise.sets,
+          repsMin: exercise.repsMin,
+          repsMax: exercise.repsMax,
+          workoutId: workoutId,
+        });
+      } catch (error) {
+        console.error("Failed to record exercise history:", error);
+        toast.error("Failed to record exercise history", {
+          description: "Exercise was created but history recording failed",
+        });
+      }
+    }
   };
 
   return (
@@ -107,6 +131,11 @@ export function CreateExerciseDialog({ workoutId, open, onOpenChange }: props) {
           placeholder={"8"}
           value={exercise.repsMin}
           onChange={(e) => updateExercise("repsMin", e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleCreate();
+            }
+          }}
         />
         <Label className="mt-2">Reps Max (optional)</Label>
         <Input
@@ -114,6 +143,11 @@ export function CreateExerciseDialog({ workoutId, open, onOpenChange }: props) {
           placeholder={"12"}
           value={exercise.repsMax ?? ""}
           onChange={(e) => updateExercise("repsMax", e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleCreate();
+            }
+          }}
         />
         <Label className="mt-2">Sets</Label>
         <Input
@@ -123,6 +157,11 @@ export function CreateExerciseDialog({ workoutId, open, onOpenChange }: props) {
           placeholder={"3"}
           value={exercise.sets}
           onChange={(e) => updateExercise("sets", e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleCreate();
+            }
+          }}
         />
         <Label className="mt-2">Weight (kg)</Label>
         <Input
@@ -130,6 +169,11 @@ export function CreateExerciseDialog({ workoutId, open, onOpenChange }: props) {
           required
           value={exercise.weight}
           onChange={(e) => updateExercise("weight", e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleCreate();
+            }
+          }}
         />
         <Label className="mt-2">Notes (optional)</Label>
         <Input

@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 
 export function useSync() {
-  const { workouts, setWorkouts, updateWorkout, removeWorkout } =
+  const { workouts, setWorkouts, updateWorkout, removeWorkout, removeExerciseFromWorkout } =
     useWorkoutStore();
 
   const syncWorkouts = useCallback(async () => {
@@ -129,7 +129,26 @@ export function useSync() {
     }
   };
 
-  return { syncWorkouts, syncSingleWorkout, syncDeleteWorkout };
+  const syncDeleteExercise = async (workoutId: string, exerciseId: string) => {
+    const session = await authClient.getSession();
+    if (!session.data) {
+      removeExerciseFromWorkout(workoutId, exerciseId);
+      return;
+    }
+
+    try {
+      removeExerciseFromWorkout(workoutId, exerciseId);
+      const workout = workouts.find((w) => w.id === workoutId);
+      if (workout) {
+        await syncWorkout(workout);
+      }
+    } catch (error) {
+      console.error("Failed to delete exercise:", error);
+      toast.error("Failed to delete exercise");
+    }
+  };
+
+  return { syncWorkouts, syncSingleWorkout, syncDeleteWorkout, syncDeleteExercise };
 }
 
 export function useSyncOnMount() {

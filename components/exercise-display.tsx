@@ -1,5 +1,6 @@
 import { useExercisePosStore } from "@/lib/exercise-pos";
 import { useWorkoutStore } from "@/lib/workout";
+import { authClient } from "@/lib/auth-client";
 import {
   Card,
   CardContent,
@@ -12,6 +13,7 @@ import { Input } from "./ui/input";
 import { PlusIcon, MinusIcon, MoreHorizontalIcon } from "lucide-react";
 import { Suspense, useState } from "react";
 import { Textarea } from "./ui/textarea";
+import { useRouter } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,8 +23,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { EditExerciseDialog } from "./edit-exercise-dialog";
+import { DeleteExerciseDialog } from "./delete-exercise-dialog";
+import { useSync } from "@/lib/useSync";
 
 export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
+  const router = useRouter();
+  const { data: session } = authClient.useSession();
   const [currentSet, setCurrentSet] = useState(1);
   const exercises = useWorkoutStore(
     (state) => state.workouts.find((find) => find.id === workoutId)?.exercises
@@ -38,11 +44,18 @@ export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
     currentExercise?.repsMax > currentExercise?.repsMin
       ? true
       : false;
-  const { updateExerciseInWorkout, removeExerciseFromWorkout } =
-    useWorkoutStore();
+  const { updateExerciseInWorkout } = useWorkoutStore();
+  const { syncDeleteExercise } = useSync();
   const [editingExercisePos, setEditingExercisePos] = useState<number | null>(
     null
   );
+  const [deletingExerciseId, setDeletingExerciseId] = useState<string | null>(
+    null
+  );
+
+  const handleDeleteExercise = (workoutId: string, exerciseId: string) => {
+    syncDeleteExercise(workoutId, exerciseId);
+  };
 
   return (
     <Suspense>
@@ -78,14 +91,21 @@ export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
                   >
                     Edit
                   </DropdownMenuItem>
+                  {currentExercise && (
+                    <DropdownMenuItem
+                      disabled={!session}
+                      onClick={() => {
+                        router.push(`/w/${workoutId}/h/${currentExercise.id}`);
+                      }}
+                    >
+                      View History
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuItem
                     className={"text-red-400"}
                     onClick={() => {
                       if (currentExercise) {
-                        removeExerciseFromWorkout(
-                          workoutId,
-                          currentExercise.id
-                        );
+                        setDeletingExerciseId(currentExercise.id);
                       }
                     }}
                   >
@@ -161,6 +181,19 @@ export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
               setEditingExercisePos(null);
             }
           }}
+        />
+      )}
+      {deletingExerciseId && (
+        <DeleteExerciseDialog
+          workoutId={workoutId}
+          exerciseId={deletingExerciseId}
+          open={deletingExerciseId !== null}
+          onOpenChange={(open) => {
+            if (!open) {
+              setDeletingExerciseId(null);
+            }
+          }}
+          onDeleteExercise={handleDeleteExercise}
         />
       )}
     </Suspense>

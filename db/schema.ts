@@ -160,9 +160,36 @@ export const workout = pgTable("workout", {
     .notNull(),
 });
 
+export const exerciseHistory = pgTable("exercise_history", {
+  id: text("id").primaryKey(),
+  exerciseName: text("exercise_name").notNull(),
+  weight: integer("weight").notNull(),
+  sets: integer("sets").notNull(),
+  repsMin: integer("reps_min").notNull(),
+  repsMax: integer("reps_max"),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  workoutId: text("workout_id")
+    .notNull()
+    .references(() => workout.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 export const workoutRelations = relations(workout, ({ one }) => ({
   user: one(user, {
     fields: [workout.userId],
     references: [user.id],
+  }),
+}));
+
+export const exerciseHistoryRelations = relations(exerciseHistory, ({ one }) => ({
+  user: one(user, {
+    fields: [exerciseHistory.userId],
+    references: [user.id],
+  }),
+  workout: one(workout, {
+    fields: [exerciseHistory.workoutId],
+    references: [workout.id],
   }),
 }));

@@ -8,6 +8,13 @@
       "when": 1768745230080,
       "tag": "0000_fast_exodus",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1768755181251,
+      "tag": "0001_milky_kingpin",
+      "breakpoints": true
     }
   ]
 }
