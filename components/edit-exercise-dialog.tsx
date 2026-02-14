@@ -99,6 +99,8 @@ export function EditExerciseDialog({
         notes: formState.notes,
       });
 
+      onOpenChange(false);
+
       const workout = useWorkoutStore
         .getState()
         .workouts.find((w) => w.id === workoutId);
@@ -129,8 +131,6 @@ export function EditExerciseDialog({
           }
         }
       }
-
-      onOpenChange(false);
     };
 
     return (
@@ -158,6 +158,11 @@ export function EditExerciseDialog({
           placeholder={"8"}
           value={formState.repsMin}
           onChange={(e) => updateField("repsMin", e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleUpdate();
+            }
+          }}
         />
         <Label className="mt-2">Reps Max (optional)</Label>
         <Input
@@ -165,6 +170,11 @@ export function EditExerciseDialog({
           placeholder={"12"}
           value={formState.repsMax ?? ""}
           onChange={(e) => updateField("repsMax", e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleUpdate();
+            }
+          }}
         />
         <Label className="mt-2">Sets</Label>
         <Input
@@ -173,6 +183,11 @@ export function EditExerciseDialog({
           placeholder={"3"}
           value={formState.sets}
           onChange={(e) => updateField("sets", e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleUpdate();
+            }
+          }}
         />
         <Label className="mt-2">Weight (kg)</Label>
         <Input
@@ -181,6 +196,11 @@ export function EditExerciseDialog({
           placeholder={"60"}
           value={formState.weight}
           onChange={(e) => updateField("weight", e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleUpdate();
+            }
+          }}
         />
         <Label className="mt-2">Notes (optional)</Label>
         <Input

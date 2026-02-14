@@ -1,5 +1,6 @@
 import { useExercisePosStore } from "@/lib/exercise-pos";
 import { useWorkoutStore } from "@/lib/workout";
+import { authClient } from "@/lib/auth-client";
 import {
   Card,
   CardContent,
@@ -27,6 +28,7 @@ import { useSync } from "@/lib/useSync";
 
 export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
   const router = useRouter();
+  const { data: session } = authClient.useSession();
   const [currentSet, setCurrentSet] = useState(1);
   const exercises = useWorkoutStore(
     (state) => state.workouts.find((find) => find.id === workoutId)?.exercises
@@ -91,6 +93,7 @@ export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
                   </DropdownMenuItem>
                   {currentExercise && (
                     <DropdownMenuItem
+                      disabled={!session}
                       onClick={() => {
                         router.push(`/w/${workoutId}/h/${currentExercise.id}`);
                       }}

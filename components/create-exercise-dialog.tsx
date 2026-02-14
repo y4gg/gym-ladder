@@ -63,6 +63,16 @@ export function CreateExerciseDialog({ workoutId, open, onOpenChange }: props) {
       notes: exercise.notes,
     });
 
+    setExercise({
+      name: "",
+      repsMin: 8,
+      repsMax: 12,
+      sets: 3,
+      weight: 0,
+      notes: "",
+    });
+    onOpenChange(false);
+
     const workout = useWorkoutStore
       .getState()
       .workouts.find((w) => w.id === workoutId);
@@ -90,16 +100,6 @@ export function CreateExerciseDialog({ workoutId, open, onOpenChange }: props) {
         });
       }
     }
-
-    setExercise({
-      name: "",
-      repsMin: 8,
-      repsMax: 12,
-      sets: 3,
-      weight: 0,
-      notes: "",
-    });
-    onOpenChange(false);
   };
 
   return (
@@ -131,6 +131,11 @@ export function CreateExerciseDialog({ workoutId, open, onOpenChange }: props) {
           placeholder={"8"}
           value={exercise.repsMin}
           onChange={(e) => updateExercise("repsMin", e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleCreate();
+            }
+          }}
         />
         <Label className="mt-2">Reps Max (optional)</Label>
         <Input
@@ -138,6 +143,11 @@ export function CreateExerciseDialog({ workoutId, open, onOpenChange }: props) {
           placeholder={"12"}
           value={exercise.repsMax ?? ""}
           onChange={(e) => updateExercise("repsMax", e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleCreate();
+            }
+          }}
         />
         <Label className="mt-2">Sets</Label>
         <Input
@@ -147,6 +157,11 @@ export function CreateExerciseDialog({ workoutId, open, onOpenChange }: props) {
           placeholder={"3"}
           value={exercise.sets}
           onChange={(e) => updateExercise("sets", e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleCreate();
+            }
+          }}
         />
         <Label className="mt-2">Weight (kg)</Label>
         <Input
@@ -154,6 +169,11 @@ export function CreateExerciseDialog({ workoutId, open, onOpenChange }: props) {
           required
           value={exercise.weight}
           onChange={(e) => updateExercise("weight", e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleCreate();
+            }
+          }}
         />
         <Label className="mt-2">Notes (optional)</Label>
         <Input

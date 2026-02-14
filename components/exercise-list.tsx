@@ -4,6 +4,7 @@ import { Separator } from "./ui/separator";
 import { Button } from "@/components/ui/button";
 import { useWorkoutStore } from "@/lib/workout";
 import { useExercisePosStore } from "@/lib/exercise-pos";
+import { authClient } from "@/lib/auth-client";
 import {
   Item,
   ItemActions,
@@ -28,6 +29,7 @@ import { useSync } from "@/lib/useSync";
 
 export function ExerciseList({ workoutId }: { workoutId: string }) {
   const router = useRouter();
+  const { data: session } = authClient.useSession();
   const exercises = useWorkoutStore(
     (state) => state.workouts.find((find) => find.id === workoutId)?.exercises
   );
@@ -85,6 +87,7 @@ export function ExerciseList({ workoutId }: { workoutId: string }) {
                   </DropdownMenuItem>
                   {currentExercise && (
                     <DropdownMenuItem
+                      disabled={!session}
                       onClick={() => {
                         router.push(`/w/${workoutId}/h/${currentExercise.id}`);
                       }}
@@ -151,6 +154,7 @@ export function ExerciseList({ workoutId }: { workoutId: string }) {
                       Edit
                     </DropdownMenuItem>
                     <DropdownMenuItem
+                      disabled={!session}
                       onClick={() => {
                         router.push(`/w/${workoutId}/h/${exercise.id}`);
                       }}
