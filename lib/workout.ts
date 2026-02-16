@@ -45,6 +45,10 @@ interface WorkoutStore {
     exerciseId: string,
     exercise: Partial<NewExercise>
   ) => void;
+  reorderExercisesInWorkout: (
+    workoutId: string,
+    exercises: Exercise[]
+  ) => void;
 }
 
 export const useWorkoutStore = create<WorkoutStore>()(
@@ -104,6 +108,18 @@ export const useWorkoutStore = create<WorkoutStore>()(
                       ? { ...e, ...exercise, updatedAt: new Date() }
                       : e
                   ),
+                  updatedAt: new Date(),
+                }
+              : workout
+          ),
+        })),
+      reorderExercisesInWorkout: (workoutId, exercises) =>
+        set((state) => ({
+          workouts: state.workouts.map((workout) =>
+            workout.id === workoutId
+              ? {
+                  ...workout,
+                  exercises,
                   updatedAt: new Date(),
                 }
               : workout
