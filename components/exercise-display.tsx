@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { PlusIcon, MinusIcon, MoreHorizontalIcon } from "lucide-react";
+import { PlusIcon, MinusIcon, MoreHorizontalIcon, RotateCcwIcon } from "lucide-react";
 import { Suspense, useState } from "react";
 import { Textarea } from "./ui/textarea";
 import { useRouter } from "next/navigation";
@@ -24,6 +24,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { EditExerciseDialog } from "./edit-exercise-dialog";
 import { DeleteExerciseDialog } from "./delete-exercise-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "./ui/alert-dialog";
 import { useSync } from "@/lib/useSync";
 
 export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
@@ -37,6 +47,7 @@ export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
     currentExercise: exercisePos,
     next,
     previous,
+    setCurrent,
   } = useExercisePosStore();
   const currentExercise = exercises?.at(exercisePos);
   const correctMaxReps =
@@ -52,6 +63,7 @@ export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
   const [deletingExerciseId, setDeletingExerciseId] = useState<string | null>(
     null
   );
+  const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
 
   const handleDeleteExercise = (workoutId: string, exerciseId: string) => {
     syncDeleteExercise(workoutId, exerciseId);
@@ -153,6 +165,36 @@ export function ExerciseDisplay({ workoutId }: { workoutId: string }) {
         </CardContent>
         <CardFooter>
           <div className="flex w-full gap-2">
+            <AlertDialog open={isResetDialogOpen} onOpenChange={setIsResetDialogOpen}>
+              <Button
+                variant="outline"
+                size="icon"
+                disabled={exercisePos === 0}
+                onClick={() => setIsResetDialogOpen(true)}
+              >
+                <RotateCcwIcon />
+              </Button>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Reset Progress</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Are you sure you want to reset to the first exercise?
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    variant="default"
+                    onClick={() => {
+                      setCurrent(0);
+                      setIsResetDialogOpen(false);
+                    }}
+                  >
+                    Reset
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
             <Button
               className="flex-1"
               onClick={() => previous()}
