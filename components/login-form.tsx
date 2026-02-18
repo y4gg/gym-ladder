@@ -26,8 +26,9 @@ import { LogInIcon, Loader2Icon } from "lucide-react";
 
 export function LoginForm({
   className,
+  redirectUrl,
   ...props
-}: React.ComponentProps<"div">) {
+}: React.ComponentProps<"div"> & { redirectUrl?: string }) {
   const { data: session } = authClient.useSession();
   const router = useRouter();
   const { syncWorkouts } = useSync();
@@ -36,7 +37,7 @@ export function LoginForm({
   const [loading, setLoading] = useState(false);
 
   if (session) {
-    router.push("/");
+    router.push(redirectUrl || "/");
     return null;
   }
 
@@ -70,7 +71,7 @@ export function LoginForm({
       } finally {
         toast.dismiss("sync-loading");
       }
-      router.push("/");
+      router.push(redirectUrl || "/");
     } finally {
       setLoading(false);
     }
@@ -130,7 +131,7 @@ export function LoginForm({
                 </Button>
                 <FieldDescription className="text-center">
                   Don&apos;t have an account?{" "}
-                  <Link href="/register">Sign up</Link>
+                  <Link href={redirectUrl ? `/register?redirect=${encodeURIComponent(redirectUrl)}` : "/register"}>Sign up</Link>
                 </FieldDescription>
               </Field>
             </FieldGroup>

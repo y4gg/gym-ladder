@@ -26,8 +26,9 @@ import { Loader2Icon, LogInIcon } from "lucide-react";
 
 export function RegisterForm({
   className,
+  redirectUrl,
   ...props
-}: React.ComponentProps<"div">) {
+}: React.ComponentProps<"div"> & { redirectUrl?: string }) {
   const { data: session } = authClient.useSession();
   const router = useRouter();
   const { syncWorkouts } = useSync();
@@ -37,7 +38,7 @@ export function RegisterForm({
   const [loading, setLoading] = useState(false);
 
   if (session) {
-    router.push("/");
+    router.push(redirectUrl || "/");
     return null;
   }
 
@@ -73,7 +74,7 @@ export function RegisterForm({
       } finally {
         toast.dismiss("sync-loading");
       }
-      router.push("/");
+      router.push(redirectUrl || "/");
     } finally {
       setLoading(false);
     }
@@ -136,7 +137,7 @@ export function RegisterForm({
                   Create account
                 </Button>
                 <FieldDescription className="text-center">
-                  Already have an account? <Link href="/login">Log in</Link>
+                  Already have an account? <Link href={redirectUrl ? `/login?redirect=${encodeURIComponent(redirectUrl)}` : "/login"}>Log in</Link>
                 </FieldDescription>
               </Field>
             </FieldGroup>

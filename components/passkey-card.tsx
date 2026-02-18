@@ -6,10 +6,10 @@ import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useSync } from "@/lib/useSync";
-import { LogInIcon, Loader2Icon, FingerprintIcon } from "lucide-react";
+import { Loader2Icon, FingerprintIcon } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
-export function PasskeyCard() {
+export function PasskeyCard({ redirectUrl }: { redirectUrl?: string }) {
   const router = useRouter();
   const { syncWorkouts } = useSync();
   const [loading, setLoading] = useState(false);
@@ -50,7 +50,7 @@ export function PasskeyCard() {
       } finally {
         toast.dismiss("sync-loading");
       }
-      router.push("/");
+      router.push(redirectUrl || "/");
     } finally {
       setLoading(false);
     }

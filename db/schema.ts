@@ -193,3 +193,30 @@ export const exerciseHistoryRelations = relations(exerciseHistory, ({ one }) => 
     references: [workout.id],
   }),
 }));
+
+export const sharedWorkout = pgTable(
+  "shared_workout",
+  {
+    id: text("id").primaryKey(),
+    workoutId: text("workout_id")
+      .notNull()
+      .references(() => workout.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    shareNotes: boolean("share_notes").default(false).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [index("shared_workout_workoutId_idx").on(table.workoutId)]
+);
+
+export const sharedWorkoutRelations = relations(sharedWorkout, ({ one }) => ({
+  workout: one(workout, {
+    fields: [sharedWorkout.workoutId],
+    references: [workout.id],
+  }),
+  user: one(user, {
+    fields: [sharedWorkout.userId],
+    references: [user.id],
+  }),
+}));

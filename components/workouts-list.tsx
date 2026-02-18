@@ -20,7 +20,9 @@ import { MoreHorizontalIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { DeleteWorkoutDialog } from "./delete-workout-dialog";
+import { ShareWorkoutDialog } from "./share-workout-dialog";
 import { useSync } from "@/lib/useSync";
+import { authClient } from "@/lib/auth-client";
 
 interface Workout {
   id: string;
@@ -38,7 +40,11 @@ export function WorkoutsList({ workouts, onCreateWorkout }: WorkoutsListProps) {
   const [deletingWorkoutId, setDeletingWorkoutId] = useState<string | null>(
     null
   );
+  const [sharingWorkout, setSharingWorkout] = useState<{ id: string; name: string } | null>(
+    null
+  );
   const { syncDeleteWorkout } = useSync();
+  const { data: session } = authClient.useSession();
 
   return (
     <div>
@@ -75,6 +81,14 @@ export function WorkoutsList({ workouts, onCreateWorkout }: WorkoutsListProps) {
                   <DropdownMenuLabel>Workout Actions</DropdownMenuLabel>
                   <DropdownMenuItem>Edit</DropdownMenuItem>
                   <DropdownMenuItem
+                    disabled={!session}
+                    onClick={() =>
+                      setSharingWorkout({ id: workout.id, name: workout.name })
+                    }
+                  >
+                    Share
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
                     className="text-red-400"
                     onClick={() => setDeletingWorkoutId(workout.id)}
                   >
@@ -96,6 +110,18 @@ export function WorkoutsList({ workouts, onCreateWorkout }: WorkoutsListProps) {
             }
           }}
           onDeleteWorkout={syncDeleteWorkout}
+        />
+      )}
+      {sharingWorkout && (
+        <ShareWorkoutDialog
+          workoutId={sharingWorkout.id}
+          workoutName={sharingWorkout.name}
+          open={sharingWorkout !== null}
+          onOpenChange={(open) => {
+            if (!open) {
+              setSharingWorkout(null);
+            }
+          }}
         />
       )}
     </div>

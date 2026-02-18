@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { workout, exerciseHistory } from "@/db/schema";
+import { workout, exerciseHistory, sharedWorkout, user } from "@/db/schema";
 import { eq, desc, and } from "drizzle-orm";
 import type { Exercise } from "@/lib/workout";
 
@@ -107,4 +107,51 @@ export async function addExerciseHistoryEntry(historyData: {
     .values(historyData)
     .returning();
   return newHistory;
+}
+
+export async function createSharedWorkout(shareData: {
+  id: string;
+  workoutId: string;
+  userId: string;
+  shareNotes: boolean;
+}) {
+  const [newShare] = await db.insert(sharedWorkout).values(shareData).returning();
+  return newShare;
+}
+
+export async function getSharedWorkoutById(shareId: string) {
+  const [share] = await db
+    .select({
+      id: sharedWorkout.id,
+      shareNotes: sharedWorkout.shareNotes,
+      createdAt: sharedWorkout.createdAt,
+      workout: workout,
+      user: { name: user.name },
+    })
+    .from(sharedWorkout)
+    .innerJoin(workout, eq(sharedWorkout.workoutId, workout.id))
+    .innerJoin(user, eq(sharedWorkout.userId, user.id))
+    .where(eq(sharedWorkout.id, shareId))
+    .limit(1);
+
+  return share;
+}
+
+export async function getSharedWorkoutByWorkoutId(workoutId: string, userId: string) {
+  const [share] = await db
+    .select()
+    .from(sharedWorkout)
+    .where(and(eq(sharedWorkout.workoutId, workoutId), eq(sharedWorkout.userId, userId)))
+    .limit(1);
+
+  return share;
+}
+
+export async function deleteSharedWorkout(shareId: string, userId: string) {
+  const [deleted] = await db
+    .delete(sharedWorkout)
+    .where(and(eq(sharedWorkout.id, shareId), eq(sharedWorkout.userId, userId)))
+    .returning();
+
+  return deleted;
 }
